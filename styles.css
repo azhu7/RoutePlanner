@@ -1,5 +1,75 @@
+.card {
+	/* Add shadows to create the "card" effect */
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	transition: 0.3s;    
+}
+
+.header {
+	padding: 20px;
+	background-color: #00ACC1;
+	color: white;
+	font-size: 15px;
+	text-align: center;
+}
+
+.footer {
+	position: absolute; 
+	bottom: 0;
+	width: 100%;
+	padding: 10px;
+	margin-top: 100px;
+	background-color: #f2f2f2;
+}
+
+.line_input[type="text"] {
+	padding: 10px;
+	border: solid 5px #c9c9c9;
+	transition: border 0.3s;
+}
+
+.line_input[type="text"]:focus {
+	border: solid 5px #969696;
+}
+/* map page css */
+body {
+	font-family: sans-serif;
+}
+
+ng-map {
+	height: 100%;
+	width: 100%;
+}
+
 #map {
-	margin: 0 auto;
-	height: 500px;
-	width: 700px;
+	height: 600px;
+}
+
+#map_lookup {
+	margin-left: 10px;
+	width: 100%;
+	padding: 10px;
+}
+
+#locations_list {
+	list-style: none;
+	overflow-y: auto;
+	min-height: 400px;
+	width: 100%;
+}
+
+#locations_list li {
+	margin-top: 10px;
+	width: 100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: #f2f2f2;
+	font-size: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.remove_location {
+	border: none;
+	font-weight: 100;
+	background-color: #f2f2f2;
 }
