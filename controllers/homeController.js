@@ -15,8 +15,15 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 
 app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
+    $scope.markers = [];
+
     $scope.placeChanged = function() {
         $scope.vm.place = this.getPlace();
+        marker = new google.maps.Marker({
+                position: $scope.vm.place.geometry.location,
+                map: $scope.vm.map,
+              });
+        $scope.markers.push()
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
     }
     NgMap.getMap().then(function(map) {
