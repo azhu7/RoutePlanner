@@ -20,9 +20,11 @@ app.controller('MapCtrl', function($scope, NgMap) {
     $scope.placeChanged = function() {
         $scope.vm.place = this.getPlace();
         marker = new google.maps.Marker({
-                position: $scope.vm.place.geometry.location,
-                map: $scope.vm.map,
-              });
+            position: $scope.vm.place.geometry.location,
+            map: $scope.vm.map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
         $scope.markers.push()
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
     }
