@@ -68,5 +68,6 @@ function getRideEstimate(destinations) {
 // let d1 = new dest(37.7763, -122.3918, "blah");
 // let d2 = new dest(37.7721, -122.4533, "blah");
 // let d3 = new dest(37.2341, -122.1029, "blah");
-// let arr = [d1, d2, d3];
+// let d4 = new dest(37.2352, -122.1032, "blah");
+// let arr = [d1, d2, d3, d4];
 // getRideEstimate(arr);
