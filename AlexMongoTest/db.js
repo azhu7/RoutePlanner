@@ -38,6 +38,7 @@ function add_trip(leader_, destinations_) {
         members: [leader_],
         leader: leader_,
         destinations: destinations_,
+        travel_times: [],               // Will be populated when we determine route
         current_stop: 0 };
     
     db.collection('trips').insertOne(new_trip, function(err, trip) {
@@ -124,8 +125,8 @@ function basic_test() {
         add_user('lingene@');
         add_user('jerry@');
 
-        var alex_trip_code = add_trip('alex@', [[0, 0, 0], [1, 1, 1], [2, 2, 2]]);
-        var albert_trip_code = add_trip('albert@', [[3, 3, 3], [4, 4, 4], [5, 5, 5]]);
+        var alex_trip_code = add_trip('alex@', [[0, 0, "d0"], [1, 1, "d1"], [2, 2, "d2"]]);
+        var albert_trip_code = add_trip('albert@', [[3, 3, "d3"], [4, 4, "d4"], [5, 5, "d5"]]);
 
         add_trip_member(alex_trip_code, 'lingene@');
         add_trip_member(alex_trip_code, 'lingene@');  // Should not insert this
@@ -172,7 +173,8 @@ TRIPS
     trip_code       string?
     members         array<user_id>
     leader          user_id
-    destinations    array<array<number>>  // { latitude, longitude, travel_time }
+    destinations    array<array<number>>  // { latitude, longitude, address }
+    travel_times    array<number>         // correponds to destinations
     current_stop    number
     
     
