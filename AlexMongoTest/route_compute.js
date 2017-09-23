@@ -1,4 +1,5 @@
 let solver = require('node-tspsolver');
+let estimate = require('')
 
 // Given two destinations ([latitude, longitude, address]), 
 // return the cost to travel from start to end.
@@ -41,6 +42,23 @@ function optimal_route(destinations, round_trip, callback) {
         });
 }
 
+function worst_route(destinations, round_trip, callback) {
+    let costs = get_cost_matrix(destinations);
+
+    // Invert to make "best" paths "worst" and vice versa
+    for (let i = 0; i < costs.length; i++) {
+        for (let j = 0; j < costs.length; j++) {
+            costs[i][j] *= -1;
+        }
+    }
+
+    solver
+        .solveTsp(costs, round_trip, {})
+        .then(function(result) {
+            callback(result);
+        })
+}
+
 function random_route(destinations, callback) {
     let counter = destinations.length;
 
@@ -56,6 +74,10 @@ function random_route(destinations, callback) {
 }
 
 optimal_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], true, function(result) {
+    console.log(result);
+});
+
+worst_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], true, function(result) {
     console.log(result);
 });
 
