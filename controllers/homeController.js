@@ -87,6 +87,6 @@ app.controller('MapCtrl', function($scope, NgMap) {
         directionsDisplay = new google.maps.DirectionsRenderer();
         $scope.vm.map = map;
         directionsDisplay.setMap(map);
-
+	google.maps.event.trigger($scope.vm.map, 'resize'); 
     });
 });

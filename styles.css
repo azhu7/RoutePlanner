@@ -32,11 +32,13 @@
 }
 /* map page css */
 body {
+	height: 100%;
 	font-family: sans-serif;
 }
 
 ng-map {
-	height: 100%;
+	position: absolute;
+	height: 500px;
 	width: 100%;
 }
 
@@ -53,7 +55,6 @@ ng-map {
 #locations_list {
 	list-style: none;
 	overflow-y: auto;
-	min-height: 400px;
 	width: 100%;
 }
 
