@@ -1,4 +1,4 @@
-<form class="container panel panel-default loginForm" ng-submit="submitForm()">
+<form name="loginForm" class="container panel panel-default loginForm" ng-submit="submitForm()">
     <div class="decoration form-group panel-body">
         Login
     </div>
@@ -9,7 +9,7 @@
         </div>
         <div class="form-group">
             <label for="phone"> Phone Number</label>
-            <input name="phone" class="form-control" id="phone" type="number" placeholder="111-222-3333" required>
+            <input name="phone" class="form-control" id="phone" type="text" placeholder="111-222-3333" maxlength="12" minlength="12" />
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary pull-right submit-btn" value="Sign In"/>

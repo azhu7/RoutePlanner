@@ -1,4 +1,4 @@
-var app = angular.module("webApp", ['ui.router', 'ui.bootstrap']);
+var app = angular.module("webApp", ['ui.router', 'ui.bootstrap','ngMap']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
@@ -9,7 +9,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }).state('map', {
         url: '/map',
         templateUrl: 'views/map.html',
-	controller: 'MapCtrl'
+    	controller: 'MapCtrl'
     });
 
     $urlRouterProvider.otherwise('/');
