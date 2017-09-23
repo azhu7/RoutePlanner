@@ -16,6 +16,14 @@ function add_user(email_) {
     });
 }
 
+function add_user_trip(email_, trip_code_) {
+    var query = { email: email_ };
+    var update_trip = { $addToSet: { trips : trip_code_ } };
+    db.collection('users').updateOne(query, update_trip, function(err, res) {
+        if (err) throw err;
+    });
+}
+
 function add_trip(leader_, destinations_) {
     var code = generate_trip_code();
     var new_trip = { 
@@ -29,6 +37,8 @@ function add_trip(leader_, destinations_) {
         if (err) throw err;
         console.log('Added new trip for ' + leader_);
     });
+    
+    add_user_trip(leader_, new_trip['trip_code']);
 }
 
 function add_trip_member(trip_code_, email) {
@@ -38,6 +48,8 @@ function add_trip_member(trip_code_, email) {
         if (err) throw err;
         console.log('Added new trip member: ' + email + ' to trip ' + trip_code_);
     });
+    
+    add_user_trip(email, trip_code_);
 }
 
 function generate_trip_code() {
