@@ -1,0 +1,28 @@
+{
+  "name": "lohoi.github.io",
+  "version": "1.0.0",
+  "description": "personal webpage",
+  "main": "app.js",
+  "dependencies": {
+    "angular": "^1.6.5",
+    "angular-animate": "^1.6.5",
+    "angular-ui-router": "^1.0.3",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "create-server": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lohoi/lohoi.github.io.git"
+  },
+  "author": "Albert Lo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lohoi/lohoi.github.io/issues"
+  },
+  "homepage": "https://github.com/lohoi/lohoi.github.io#readme"
+}

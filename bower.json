@@ -1,0 +1,23 @@
+{
+  "name": "lohoi.github.io",
+  "description": "personal webpage",
+  "main": "app.js",
+  "authors": [
+    "Albert Lo"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/lohoi/lohoi.github.io",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-bootstrap": "^2.5.0",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "angular-animate": "^1.6.5"
+  }
+}
