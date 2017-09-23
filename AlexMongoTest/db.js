@@ -2,9 +2,11 @@ let crypto = require('crypto');
 let MongoClient = require('mongodb').MongoClient;
 let url = 'mongodb://localhost:27017/mydb';
 let db = null;
+let default_user_collection_name = 'users';
+let default_trip_collection_name = 'trips';
 
 module.exports = {
-    open: function() {
+    open: function(user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
         // Connect to MongoDB.
         MongoClient.connect(url, function(err, db_) {
             if (err) throw err;
@@ -12,50 +14,55 @@ module.exports = {
             console.log('db: MongoClient opened');
 
             // Create index to enforce unique keys.
-            db.collection('users').createIndex({ email: 1 }, { unique: true }, function(err, result) {
+            db.collection(user_collection_name).createIndex({ email: 1 }, { unique: true }, function(err, result) {
                 if (err) throw err;
-                console.log('db: Created unique email index for users collection');
+                console.log('db: Created unique email index for ' + user_collection_name + ' collection');
             });
 
-            db.collection('trips').createIndex({ trip_code: 1 }, { unique: true }, function(err, result) {
+            db.collection(trip_collection_name).createIndex({ trip_code: 1 }, { unique: true }, function(err, result) {
                 if (err) throw err;
-                console.log('db: Created unique trip_code index for trips collection');
+                console.log('db: Created unique trip_code index for ' + trip_collection_name + ' collection');
             });
         });
     },
 
     // Add user to users collection. No effect if user already exists.
-    add_user: function(email_) {
+    add_user: function(email_, phone_, collection_name=default_user_collection_name) {
         let query = { email: email_ };
-        let new_user = { $set: { email: email_ } };
+        let new_user = { $setOnInsert: { 
+            email: email_,
+            phone: phone_,
+            trips: [],
+            current_trip: null 
+        }};
 
-        db.collection('users').update(query, new_user, {upsert: true}, function(err, res) {
+        db.collection(collection_name).update(query, new_user, {upsert: true}, function(err, res) {
             if (err) throw err;
             console.log('db: Added user ' + email_);
         });
     },
 
     // Add trip to specified user.
-    add_user_trip: function(email_, trip_code_) {
+    add_user_trip: function(email_, trip_code_, collection_name=default_user_collection_name) {
         let query = { email: email_ };
-        let update_user = { $addToSet: { trips : trip_code_ } };
-        db.collection('users').updateOne(query, update_user, function(err, res) {
+        let update_user = { $addToSet: { trips: trip_code_ }, $set: { current_trip: trip_code_ } };
+        db.collection(collection_name).updateOne(query, update_user, function(err, res) {
             if (err) throw err;
             console.log('db: Added trip to ' + email_);
         });
     },
 
     // Return and pass user info into supplied callback.
-    get_user: function(email_, callback) {
+    get_user: function(email_, callback, collection_name=default_user_collection_name) {
         let query = { email: email_ };
-        db.collection('users').findOne(query, function(err, res) {
+        db.collection(collection_name).findOne(query, function(err, res) {
             if (err) throw err;
             callback(res);
         });
     },
 
     // Add trip to trips collection.
-    add_trip: function(leader_, destinations_) {
+    add_trip: function(leader_, destinations_, user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
         let code = generate_trip_code();
         let new_trip = { 
             trip_code: code,
@@ -66,31 +73,31 @@ module.exports = {
             current_stop: 0
         };
         
-        db.collection('trips').insertOne(new_trip, function(err, trip) {
+        db.collection(trip_collection_name).insertOne(new_trip, function(err, trip) {
             if (err) throw err;
             console.log('db: Created new trip ' + new_trip['trip_code'] + ' for ' + leader_);
         });
         
-        module.exports.add_user_trip(leader_, new_trip['trip_code']);
+        module.exports.add_user_trip(leader_, new_trip['trip_code'], user_collection_name);
         return new_trip['trip_code'];
     },
 
     // Add member to specified trip. No result if member already part of trip.
-    add_trip_member: function(trip_code_, email) {
-        let query = { trip_code : trip_code_ };
-        let update_trip = { $addToSet: { members : email } }
-        db.collection('trips').updateOne(query, update_trip, function(err, res) {
+    add_trip_member: function(trip_code_, email, user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
+        let query = { trip_code: trip_code_ };
+        let update_trip = { $addToSet: { members: email } }
+        db.collection(trip_collection_name).updateOne(query, update_trip, function(err, res) {
             if (err) throw err;
             console.log('db: Added new trip member: ' + email + ' to trip ' + trip_code_);
         });
         
-        module.exports.add_user_trip(email, trip_code_);
+        module.exports.add_user_trip(email, trip_code_, user_collection_name);
     },
 
     // Retrieve and pass trip info into supplied callback.
-    get_trip: function(trip_code_, callback) {
+    get_trip: function(trip_code_, callback, collection_name=default_trip_collection_name) {
         let query = { trip_code: trip_code_ };
-        db.collection('trips').findOne(query, function(err, res) {
+        db.collection(collection_name).findOne(query, function(err, res) {
             if (err) throw err;
             callback(res);
         });
@@ -98,14 +105,14 @@ module.exports = {
 
     // Move specified trip current_stop to next destination.
     // Return false if at end of trip. Otherwise, return true.
-    check_in: function(trip_code_) {
-        let query = { trip_code : trip_code_ };
+    check_in: function(trip_code_, collection_name=default_trip_collection_name) {
+        let query = { trip_code: trip_code_ };
         let update_trip = { $inc: { current_stop: 1 } };
-        db.collection('trips').updateOne(query, update_trip, function(err, res) {
+        db.collection(collection_name).updateOne(query, update_trip, function(err, res) {
             if (err) throw err;
         });
 
-        db.collection('trips').findOne(query, function(err, trip) {
+        db.collection(collection_name).findOne(query, function(err, trip) {
             if (err) throw err;
             console.log('db: Checked in to trip ' + trip_code_);
             return (trip['current_stop'] >= trip['destinations'].length)
@@ -150,6 +157,7 @@ function generate_trip_code() {
 USERS
     user_id         number (P_KEY)
     email           string not null
+    phone           string not null
     trips           array<trip_id>
     current_trip    trip_id
 
