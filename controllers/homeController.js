@@ -15,20 +15,13 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 
 app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
+    // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
+    $scope.markers = [];
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 
-    $scope.placeChanged = function() {
-        $scope.vm.place = this.getPlace();
-        console.log($scope.vm.place.geometry.location)
-        marker = new google.maps.Marker({
-            position: $scope.vm.place.geometry.location,
-            map: $scope.vm.map,
-            draggable: true,
-            animation: google.maps.Animation.DROP
-        });
-
+    $scope.calculateRoute = function() {
         if ($scope.locations.length) {
             console.log("calculating a route....")
 
@@ -58,10 +51,38 @@ app.controller('MapCtrl', function($scope, NgMap) {
                 }
             })
         };
+    };
+
+    $scope.placeChanged = function() {
+	// remove words in search bar
+	$scope.address = "";
+        $scope.vm.place = this.getPlace();
+        console.log($scope.vm.place.geometry.location)
+        marker = new google.maps.Marker({
+            position: $scope.vm.place.geometry.location,
+            map: $scope.vm.map,
+            draggable: false,
+            animation: google.maps.Animation.DROP
+        });
+
         $scope.vm.map.setZoom(10)
         $scope.locations.push($scope.vm.place);
+	$scope.markers.push(marker);
+	$scope.vm.map.setZoom(13);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
-    }
+
+	$scope.calculateRoute();
+    };
+
+    // splices the location away from locations but also
+    // removes the marker off the map
+    $scope.removeLocation = function(index) {	
+	$scope.locations.splice(index, 1);	
+	$scope.markers[index].setMap(null);
+	$scope.markers.splice(index, 1);
+	$scope.calculateRoute();
+    };
+
     NgMap.getMap().then(function(map) {
         directionsDisplay = new google.maps.DirectionsRenderer();
         $scope.vm.map = map;

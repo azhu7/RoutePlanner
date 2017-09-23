@@ -2,19 +2,20 @@
 <div class="header"><strong>Plan Trip</strong></div>
 <div class="row">
 	<div class="col-sm-3">
-		<ul id="locations_list" class="pull-left">
-			<li class="card" ng-repeat="location in locations">
+		<input id="map_lookup" class="line_input center-block" places-auto-complete ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
+		on-place-changed="placeChanged()" />
+		<ul id="locations_list" class="center-block">
+			<li class="card" ng-repeat="location in locations track by $index">
 				<div>
+					<button class="remove_location" ng-click="removeLocation($index)"><i class="fa fa-close"></i></button>
 					{{location.formatted_address}}
 				</div>
 			</li>
 		</ul>	
 	</div>
 	<div class="col-sm-9">
-		<input class="line_input center-block" places-auto-complete size=80 ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
-																								 on-place-changed="placeChanged()" />
 		<div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
-			<ng-map center="41,-87" zoom="3"></ng-map>
+			<ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
 
 		</div>
 	</div>	

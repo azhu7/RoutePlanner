@@ -21,15 +21,14 @@
 	background-color: #f2f2f2;
 }
 
-.line_input {
+.line_input[type="text"] {
 	padding: 10px;
-	border: none;
-	border-bottom: solid 2px #c9c9c9;
+	border: solid 5px #c9c9c9;
 	transition: border 0.3s;
 }
 
 .line_input[type="text"]:focus {
-	border-bottom: solid 2px #969696;
+	border: solid 5px #969696;
 }
 /* map page css */
 body {
@@ -37,13 +36,18 @@ body {
 }
 
 ng-map {
-	margin: 0 auto;
 	height: 100%;
 	width: 100%;
 }
 
 #map {
 	height: 600px;
+}
+
+#map_lookup {
+	margin-left: 10px;
+	width: 100%;
+	padding: 10px;
 }
 
 #locations_list {
@@ -62,4 +66,10 @@ ng-map {
 	font-size: 15px;
 	padding-top: 10px;
 	padding-bottom: 10px;
+}
+
+.remove_location {
+	border: none;
+	font-weight: 100;
+	background-color: #f2f2f2;
 }
