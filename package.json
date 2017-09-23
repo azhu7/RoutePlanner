@@ -1,8 +1,8 @@
 {
-  "name": "lohoi.github.io",
+  "name": "routeplanner",
   "version": "1.0.0",
-  "description": "personal webpage",
-  "main": "app.js",
+  "description": "route planner app for mhacks x",
+  "main": "server.js",
   "dependencies": {
     "angular": "^1.6.5",
     "angular-animate": "^1.6.5",
@@ -15,20 +15,19 @@
     "morgan": "^1.8.2",
     "node-lyft": "^1.0.3"
   },
-  "devDependencies": {
-    "create-server": "^1.0.1"
-  },
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lohoi/lohoi.github.io.git"
+    "url": "git+https://github.com/azhu7/RoutePlanner.git"
   },
-  "author": "Albert Lo",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lohoi/lohoi.github.io/issues"
+    "url": "https://github.com/azhu7/RoutePlanner/issues"
   },
-  "homepage": "https://github.com/lohoi/lohoi.github.io#readme"
+  "homepage": "https://github.com/azhu7/RoutePlanner#readme"
 }
