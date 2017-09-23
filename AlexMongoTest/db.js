@@ -30,6 +30,15 @@ function add_user_trip(email_, trip_code_) {
     });
 }
 
+// Return and pass user info into supplied callback.
+function get_user(email_, callback) {
+    var query = { email: email_ };
+    db.collection('users').findOne(query, function(err, res) {
+        if (err) throw err;
+        callback(res);
+    });
+}
+
 // Add trip to trips collection.
 function add_trip(leader_, destinations_) {
     var code = generate_trip_code();
@@ -38,6 +47,7 @@ function add_trip(leader_, destinations_) {
         members: [leader_],
         leader: leader_,
         destinations: destinations_,
+        travel_times: [],               // Will be populated when we determine route
         current_stop: 0 };
     
     db.collection('trips').insertOne(new_trip, function(err, trip) {
@@ -59,6 +69,15 @@ function add_trip_member(trip_code_, email) {
     });
     
     add_user_trip(email, trip_code_);
+}
+
+// Retrieve and pass trip info into supplied callback.
+function get_trip(trip_code_, callback) {
+    var query = { trip_code: trip_code_ };
+    db.collection('trips').findOne(query, function(err, res) {
+        if (err) throw err;
+        callback(res);
+    });
 }
 
 // Generate random 6-digit trip code.
@@ -94,18 +113,7 @@ function print_table(name) {
 }
 
 function basic_test() {
-    /*setTimeout(function() {
-        db.collection('users').drop(function(err, result) {
-            if (err) throw err;
-            if (result) console.log('Users collection deleted');
-        });
-        
-        db.collection('trips').drop(function(err, result) {
-            if (err) throw err;
-            if (result) console.log('Trips collection deleted');
-        });
-    }, 500);*/
-
+    // Create index to enforce unique keys.
     setTimeout(function() {
         db.collection("users").createIndex({ email: 1 }, { unique: true }, function(err, result) {
             if (err) throw err;
@@ -118,14 +126,15 @@ function basic_test() {
         });
     }, 1000);
 
+    // Add users, trips, and members.
     setTimeout(function() {
         add_user('alex@');
         add_user('albert@');
         add_user('lingene@');
         add_user('jerry@');
 
-        var alex_trip_code = add_trip('alex@', [[0, 0, 0], [1, 1, 1], [2, 2, 2]]);
-        var albert_trip_code = add_trip('albert@', [[3, 3, 3], [4, 4, 4], [5, 5, 5]]);
+        var alex_trip_code = add_trip('alex@', [[0, 0, "d0"], [1, 1, "d1"], [2, 2, "d2"]]);
+        var albert_trip_code = add_trip('albert@', [[3, 3, "d3"], [4, 4, "d4"], [5, 5, "d5"]]);
 
         add_trip_member(alex_trip_code, 'lingene@');
         add_trip_member(alex_trip_code, 'lingene@');  // Should not insert this
@@ -134,12 +143,24 @@ function basic_test() {
         add_trip_member(albert_trip_code, 'lingene@');
     }, 2000);
 
+
+    // Print information.
     setTimeout(function() {
         add_user('alex@');  // Should not insert this, should not reset element 'alex@'
+
+        // Print albert's info and albert's trip's info
+        get_user('albert@', function(user) {
+            console.log(user);
+            get_trip(user['trips'][0], function(trip) {
+                console.log(trip);
+            })
+        });
+
         print_table('users');
         print_table('trips');
     }, 3000);
 
+    // Delete collections.
     setTimeout(function() {
         db.collection('users').drop(function(err, result) {
             if (err) throw err;
@@ -152,6 +173,7 @@ function basic_test() {
         });
     }, 5000);
 
+    // Close MongoClient
     setTimeout(function() {
         db.close();
     }, 7000);
@@ -172,7 +194,8 @@ TRIPS
     trip_code       string?
     members         array<user_id>
     leader          user_id
-    destinations    array<array<number>>  // { latitude, longitude, travel_time }
+    destinations    array<array<number>>  // { latitude, longitude, address }
+    travel_times    array<number>         // correponds to destinations
     current_stop    number
     
     
