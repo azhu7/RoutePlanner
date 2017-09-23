@@ -18,6 +18,7 @@
     "angular-ui-bootstrap": "^2.5.0",
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
-    "angular-animate": "^1.6.5"
+    "angular-animate": "^1.6.5",
+    "angular-ui-router": "^1.0.6"
   }
 }
