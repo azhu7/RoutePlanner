@@ -1,3 +1,8 @@
+/**
+db.js
+Interface for interacting with the RoutePlanner MongoDB backend.
+*/
+
 let crypto = require('crypto');
 let MongoClient = require('mongodb').MongoClient;
 let url = 'mongodb://localhost:27017/mydb';

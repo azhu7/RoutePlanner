@@ -1,5 +1,9 @@
+/**
+route_compute.js
+Set of functions for computing various routes, given an array of destinations ([latitude, longitude, address])
+*/
+
 let solver = require('node-tspsolver');
-let estimate = require('')
 
 // Given two destinations ([latitude, longitude, address]), 
 // return the cost to travel from start to end.
