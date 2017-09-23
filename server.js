@@ -6,8 +6,10 @@ var morgan = require('morgan');             // log requests to the console (expr
 var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
-// configuration =================
 
+// configuration =================
+var db = require('./AlexMongoTest/db.js')
+db.open();
 // mongoose.connect('mongodb://node:nodeuser@mongo.onmodulus.net:27017/uwO3mypu');     // connect to mongoDB database on modulus.io
 
 app.use(express.static(__dirname));                 // set the static files location /public/img will be /img for users
@@ -17,8 +19,12 @@ app.use(bodyParser.json());                                     // parse applica
 // app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
 
-app.get('',function(req,res) {
-    res.send(200);
+app.post('/login',function(req,res,next) {
+    console.log("")
+    db.add_user(req.body.email)
+    db.print_collection("users")
+    console.log("req.query: ",req.body);
+    res.json(200);
 })
 
 app.get('*',function(req,res) {
