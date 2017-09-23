@@ -3,7 +3,7 @@ db_tests.js
 Test class assessing basic db functionalities.
 */
 
-let db = require('./db.js');
+let db = require('../js/db.js');
 
 let test_user_collection_name = 'users_test';
 let test_trip_collection_name = 'trips_test';

@@ -8,7 +8,7 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 
 // configuration =================
-var db = require('./AlexMongoTest/db.js')
+var db = require('./js/db.js')
 db.open();
 // mongoose.connect('mongodb://node:nodeuser@mongo.onmodulus.net:27017/uwO3mypu');     // connect to mongoDB database on modulus.io
 

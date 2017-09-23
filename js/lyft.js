@@ -21,7 +21,7 @@ function estimate(min_price, max_price, time, miles) {
 }
 
 // takes in array of dest objects, calculates estimates using ride_type lyft
-function getRideEstimate(destinations) {
+function getRideEstimate(destinations, callback) {
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
     let est_time_seconds = 0;
@@ -55,9 +55,9 @@ function getRideEstimate(destinations) {
                     est_dist_miles += estimate["estimated_distance_miles"];
                 }
             }
+
             let obj = new estimate(est_cost_cents_min/100, est_cost_cents_max/100, est_time_seconds/3600, est_dist_miles);
-            console.log(obj);
-            return obj;
+            callback(obj);
         })
         .catch((e) => {
             throw e;
@@ -70,4 +70,6 @@ function getRideEstimate(destinations) {
 // let d3 = new dest(37.2341, -122.1029, "blah");
 // let d4 = new dest(37.2352, -122.1032, "blah");
 // let arr = [d1, d2, d3, d4];
-// getRideEstimate(arr);
+// getRideEstimate(arr, function(res) {
+//     console.log(res);
+// });
