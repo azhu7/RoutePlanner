@@ -1,16 +1,10 @@
 Auto Complete Type:
-<select ng-model="vm.types">
-    <option value="['geocode']">Geodode</option>
-    <option value="['establishment']">Establishment</option>
-    <option value="['address']">Address</option>
-</select><br/>
 
 Enter an address: <br/>
 <input places-auto-complete size=80
             ng-model="vm.address"
             component-restrictions="{country:'us'}"
-            types="{{types}}"
-            on-place-changed="vm.placeChanged()" /> <br/>
+            on-place-changed="placeChanged()" /> <br/>
 <div ng-show="vm.place">
     Address = {{vm.place.formatted_address}} <br/>
     Location: {{vm.place.geometry.location}}<br/>

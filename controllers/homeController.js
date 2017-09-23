@@ -14,16 +14,12 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // MapCtrl
 
 app.controller('MapCtrl', function($scope, NgMap) {
-    var vm = this;
-    vm.types = "['establishment']";
-    vm.placeChanged = function() {
-        console.log("Sup!!!")
-        console.log(this.getPlace())
-        vm.place = this.getPlace();
-        console.log('location', vm.place.geometry.location);
-        vm.map.setCenter(vm.place.geometry.location);
+    $scope.vm = this;
+    $scope.placeChanged = function() {
+        $scope.vm.place = this.getPlace();
+        $scope.vm.map.setCenter($scope.vm.place.geometry.location);
     }
     NgMap.getMap().then(function(map) {
-        vm.map = map;
+        $scope.vm.map = map;
     });
 });
