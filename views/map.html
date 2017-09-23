@@ -1,13 +1,23 @@
-Auto Complete Type:
 
-Enter an address: <br/>
-<input places-auto-complete size=80
-            ng-model="vm.address"
-            component-restrictions="{country:'us'}"
-            on-place-changed="placeChanged()" /> <br/>
-<div ng-show="vm.place">
-    Address = {{vm.place.formatted_address}} <br/>
-    Location: {{vm.place.geometry.location}}<br/>
+<div class="row">
+	<div class="col-sm-4">
+		<h2>Locations</h2>
+		<ul>
+			<li ng-repeat="marker in markers">hello</li>
+		</ul>	
+	</div>
+	<div class="col-sm-8">
+		<br>
+		<br>
+		<input places-auto-complete size=80 ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
+																								 on-place-changed="placeChanged()" />
+		<div ng-show="vm.place">
+			Address = {{vm.place.formatted_address}} <br/>
+			Location: {{vm.place.geometry.location}}<br/> 
+		</div>
+		<div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
+			<ng-map center="41,-87" zoom="3"></ng-map>
+
+		</div>
+	</div>	
 </div>
-address : {{vm.address}}
-<ng-map center="41,-87" zoom="3"></ng-map>
