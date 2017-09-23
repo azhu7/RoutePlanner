@@ -2,11 +2,26 @@ body {
     margin: 2%;
 }
 
-.submit-btn {
-    margin-top:8px;
-}
-
 .loginForm {
     width: 50%;
     margin-top: 80px;
 }
+
+.container{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.form-group {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.decoration {
+    background-color: #001f3f;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+

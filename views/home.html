@@ -1,8 +1,19 @@
 <form class="container panel panel-default loginForm" ng-submit="submitForm()">
-    <div class="form-group panel-body">
-        <label for="email">Email</label>
-        <input name="email" class="form-control" id="email" type="email" placeholder="JohnDoe@gmail.com" ng-model="user.email" required/>
-        <input type="submit" class="btn btn-primary pull-right submit-btn" value="Sign In"/>
+    <div class="decoration form-group panel-body">
+        Login
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input name="email" class="form-control" id="email" type="email" placeholder="JohnDoe@gmail.com" ng-model="user.email" required/>
+        </div>
+        <div class="form-group">
+            <label for="phone"> Phone Number</label>
+            <input name="phone" class="form-control" id="phone" type="number" placeholder="111-222-3333" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary pull-right submit-btn" value="Sign In"/>
+        </div>
     </div>
 </form>
 
