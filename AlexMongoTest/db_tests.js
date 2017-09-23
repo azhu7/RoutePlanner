@@ -4,8 +4,7 @@ let test_user_collection_name = 'users_test';
 let test_trip_collection_name = 'trips_test';
 
 function basic_test() {
-    let url = 'mongodb://localhost:27017/mydb';
-    db.open(url, test_user_collection_name, test_trip_collection_name);
+    db.open(test_user_collection_name, test_trip_collection_name);
 
     // Add users, trips, and members.
     setTimeout(function() {

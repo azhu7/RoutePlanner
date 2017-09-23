@@ -1,14 +1,14 @@
 let crypto = require('crypto');
 let MongoClient = require('mongodb').MongoClient;
-// let url = 'mongodb://localhost:27017/mydb';
+let url = 'mongodb://localhost:27017/mydb';
 let db = null;
 let default_user_collection_name = 'users';
 let default_trip_collection_name = 'trips';
 
 module.exports = {
-    open: function(url_, user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
+    open: function(user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
         // Connect to MongoDB.
-        MongoClient.connect(url_, function(err, db_) {
+        MongoClient.connect(url, function(err, db_) {
             if (err) throw err;
             db = db_;
             console.log('db: MongoClient opened');
