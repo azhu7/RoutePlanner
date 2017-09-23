@@ -4,38 +4,37 @@ Set of functions for computing various routes, given an array of destinations ([
 */
 
 let solver = require('node-tspsolver');
+let estimator = require('./lyft.js')
 
-// Given two destinations ([latitude, longitude, address]), 
-// return the cost to travel from start to end.
 function get_cost(start, end) {
     return 1;
 }
 
 // Given an array of destinations ([latitude, longitude, address]), 
 // return a matrix of costs.
-function get_cost_matrix(destinations) {
-    let costs = new Array(destinations.length);
-    for (let i = 0; i < costs.length; i++) {
-        costs[i] = new Array(destinations.length);
+function get_cost_matrix(destinations, callback) {
+    let cost_matrix = new Array(destinations.length);
+    for (let i = 0; i < cost_matrix.length; i++) {
+        cost_matrix[i] = new Array(destinations.length);
     }
 
     for (let start = 0; start < destinations.length; start++) {
-        costs[start][start] = 0;  // Costs nothing to travel to itself
+        cost_matrix[start][start] = 0;  // Costs nothing to travel to itself
         for (let end = start + 1; end < destinations.length; end++) {
             let cost = get_cost(destinations[start], destinations[end]);
-            costs[start][end] = cost;
-            costs[end][start] = cost;
+            cost_matrix[start][end] = cost;
+            cost_matrix[end][start] = cost;
         }
     }
 
-    for (let i = 0; i < costs.length; i++) {
-        for (let j = 0; j < costs.length; j++) {
-            console.log(costs[i][j] + ' ');
-        }
-        console.log('\n');
-    }
+    // for (let i = 0; i < cost_matrix.length; i++) {
+    //     for (let j = 0; j < cost_matrix.length; j++) {
+    //         console.log(cost_matrix[i][j] + ' ');
+    //     }
+    //     console.log('\n');
+    // }
 
-    return costs;
+    return cost_matrix;
 }
 
 function optimal_route(destinations, round_trip, callback) {
@@ -47,17 +46,17 @@ function optimal_route(destinations, round_trip, callback) {
 }
 
 function worst_route(destinations, round_trip, callback) {
-    let costs = get_cost_matrix(destinations);
+    let cost_matrix = get_cost_matrix(destinations);
 
     // Invert to make "best" paths "worst" and vice versa
-    for (let i = 0; i < costs.length; i++) {
-        for (let j = 0; j < costs.length; j++) {
-            costs[i][j] *= -1;
+    for (let i = 0; i < cost_matrix.length; i++) {
+        for (let j = 0; j < cost_matrix.length; j++) {
+            cost_matrix[i][j] *= -1;
         }
     }
 
     solver
-        .solveTsp(costs, round_trip, {})
+        .solveTsp(cost_matrix, round_trip, {})
         .then(function(result) {
             callback(result);
         })
