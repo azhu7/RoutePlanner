@@ -1,20 +1,18 @@
 
+<div class="header"><strong>Plan Trip</strong></div>
 <div class="row">
-	<div class="col-sm-4">
-		<h2>Locations</h2>
-		<ul>
-			<li ng-repeat="marker in markers">hello</li>
+	<div class="col-sm-3">
+		<ul id="locations_list" class="pull-left">
+			<li class="card" ng-repeat="location in locations">
+				<div>
+					{{location.formatted_address}}
+				</div>
+			</li>
 		</ul>	
 	</div>
-	<div class="col-sm-8">
-		<br>
-		<br>
-		<input places-auto-complete size=80 ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
+	<div class="col-sm-9">
+		<input class="line_input center-block" places-auto-complete size=80 ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
 																								 on-place-changed="placeChanged()" />
-		<div ng-show="vm.place">
-			Address = {{vm.place.formatted_address}} <br/>
-			Location: {{vm.place.geometry.location}}<br/> 
-		</div>
 		<div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
 			<ng-map center="41,-87" zoom="3"></ng-map>
 

@@ -15,7 +15,7 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 
 app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
-    $scope.markers = [];
+    $scope.locations = [];
 
     $scope.placeChanged = function() {
         $scope.vm.place = this.getPlace();
@@ -23,7 +23,8 @@ app.controller('MapCtrl', function($scope, NgMap) {
                 position: $scope.vm.place.geometry.location,
                 map: $scope.vm.map,
               });
-        $scope.markers.push()
+        $scope.locations.push($scope.vm.place);
+	$scope.vm.map.setZoom(10);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
     }
     NgMap.getMap().then(function(map) {
