@@ -1,5 +1,4 @@
 let lyft = require('node-lyft');
-let sleep = require('sleep');
 let defaultClient = lyft.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: Client Authentication
@@ -56,7 +55,6 @@ function getRideEstimate(destinations) {
                     est_dist_miles += estimate["estimated_distance_miles"];
                 }
             }
-            // console.log(data);
             let obj = new estimate(est_cost_cents_min/100, est_cost_cents_max/100, est_time_seconds/3600, est_dist_miles);
             console.log(obj);
             return obj;
@@ -68,7 +66,7 @@ function getRideEstimate(destinations) {
 
 /* Test Case */
 // let d1 = new dest(37.7763, -122.3918, "blah");
-// let d2 = new dest(37.7972, -122.4533, "blah");
+// let d2 = new dest(37.7721, -122.4533, "blah");
 // let d3 = new dest(37.2341, -122.1029, "blah");
 // let arr = [d1, d2, d3];
 // getRideEstimate(arr);
