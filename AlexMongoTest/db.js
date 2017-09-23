@@ -3,11 +3,13 @@ var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/mydb';
 var db;
 
+// Connect to MongoDB.
 MongoClient.connect(url, function(err, db_) {
     if (err) throw err;
     db = db_;
 });
 
+// Add user to users collection.
 function add_user(email_) {
     var new_user = { email: email_, trips: [] };
     db.collection('users').insertOne(new_user, function(err, user) {
@@ -16,6 +18,7 @@ function add_user(email_) {
     });
 }
 
+// Add trip to specified user.
 function add_user_trip(email_, trip_code_) {
     var query = { email: email_ };
     var update_trip = { $addToSet: { trips : trip_code_ } };
@@ -24,6 +27,7 @@ function add_user_trip(email_, trip_code_) {
     });
 }
 
+// Add trip to trips collection.
 function add_trip(leader_, destinations_) {
     var code = generate_trip_code();
     var new_trip = { 
@@ -39,8 +43,10 @@ function add_trip(leader_, destinations_) {
     });
     
     add_user_trip(leader_, new_trip['trip_code']);
+    return new_trip['trip_code'];
 }
 
+// Add member to specified trip.
 function add_trip_member(trip_code_, email) {
     var query = { trip_code : trip_code_ };
     var new_member = { $addToSet: { members : email } }
@@ -52,6 +58,7 @@ function add_trip_member(trip_code_, email) {
     add_user_trip(email, trip_code_);
 }
 
+// Generate random 6-digit trip code.
 function generate_trip_code() {
     var firstPart = (Math.random() * 46656) | 0;
     var secondPart = (Math.random() * 46656) | 0;
@@ -59,7 +66,7 @@ function generate_trip_code() {
     secondPart = ('000' + secondPart.toString(36)).slice(-3);
     return firstPart + secondPart;
 }
-
+// Print contents of specified collection.
 function print_table(name) {
     MongoClient.connect(url, function(err, db) {
       if (err) throw err;
@@ -70,48 +77,6 @@ function print_table(name) {
       });
     });
 }
-
-setTimeout(function() {
-    add_user('alex@');
-    add_user('albert@');
-    add_user('lingene@');
-    add_user('jerry@');
-    add_trip('alex@', ['d1', 'd2', 'd3']);
-    add_trip('albert@', ['d4', 'd5', 'd6']);
-    db.collection('trips').findOne({ leader: 'alex@' }, (function(err, result) {
-        if (err) throw err;
-        add_trip_member(result['trip_code'], 'lingene@');
-        add_trip_member(result['trip_code'], 'lingene@');
-        add_trip_member(result['trip_code'], 'jerry@');
-    }));
-    
-    db.collection('trips').findOne({ leader: 'albert@' }, (function(err, result) {
-        if (err) throw err;
-        add_trip_member(result['trip_code'], 'alex@');
-        add_trip_member(result['trip_code'], 'lingene@');
-    }));
-}, 1000);
-
-setTimeout(function() {
-    print_table('users');
-    print_table('trips');
-}, 3000);
-
-setTimeout(function() {
-    db.collection('users').drop(function(err, result) {
-        if (err) throw err;
-        if (result) console.log('Users collection deleted');
-    });
-    
-    db.collection('trips').drop(function(err, result) {
-        if (err) throw err;
-        if (result) console.log('Trips collection deleted');
-    });
-}, 5000);
-
-setTimeout(function() {
-    db.close();
-}, 7000);
 
 /**
 
@@ -148,7 +113,51 @@ Finish:
 
 */
 
+function basic_test() {
+    setTimeout(function() {
+        add_user('alex@');
+        add_user('albert@');
+        add_user('lingene@');
+        add_user('jerry@');
+        add_trip('alex@', ['d1', 'd2', 'd3']);
+        add_trip('albert@', ['d4', 'd5', 'd6']);
+        db.collection('trips').findOne({ leader: 'alex@' }, (function(err, result) {
+            if (err) throw err;
+            add_trip_member(result['trip_code'], 'lingene@');
+            add_trip_member(result['trip_code'], 'lingene@');
+            add_trip_member(result['trip_code'], 'jerry@');
+        }));
+        
+        db.collection('trips').findOne({ leader: 'albert@' }, (function(err, result) {
+            if (err) throw err;
+            add_trip_member(result['trip_code'], 'alex@');
+            add_trip_member(result['trip_code'], 'lingene@');
+        }));
+    }, 1000);
 
+    setTimeout(function() {
+        print_table('users');
+        print_table('trips');
+    }, 3000);
+
+    setTimeout(function() {
+        db.collection('users').drop(function(err, result) {
+            if (err) throw err;
+            if (result) console.log('Users collection deleted');
+        });
+        
+        db.collection('trips').drop(function(err, result) {
+            if (err) throw err;
+            if (result) console.log('Trips collection deleted');
+        });
+    }, 5000);
+
+    setTimeout(function() {
+        db.close();
+    }, 7000);
+}
+
+basic_test();
 
 
 
