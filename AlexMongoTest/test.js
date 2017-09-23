@@ -19,20 +19,25 @@ function add_user(email_) {
     });
 }
 
-function add_location(latitude_, longitude_) {
-    var new_location = { latitude: latitude_, longitude: longitude_ };
-    db.collection("locations").insertOne(new_location, function(err, location) {
-        if (err) throw err;
-        console.log("Added new location: " + location.latitude + ", " + location.longitude);
-    });
-}
-
-function add_trip() {
+function add_trip(leader_, destinations_) {
+    var code = generate_trip_code();
+    var new_trip = { 
+        trip_code: code,
+        members: [leader_],
+        leader: leader_,
+        destinations: destinations_,
+        current_stop: 0 };
     
+    db.collection("trips").insertOne(new_trip, function(err, trip) {
+        if (err) throw err;
+        console.log("Added new trip: " + trip);
+    }
 }
 
 function generate_trip_code() {
-    
+    var current_date = (new Date()).valueOf().toString();
+    var random = Math.random().toString();
+    return crypto.createHash('sha1').update(current_date + random).digest('hex');
 }
 
 /**
@@ -40,21 +45,17 @@ function generate_trip_code() {
 USERS
     user_id         number (P_KEY)
     email           string not null
-    trips           array<number>
+    trips           array<trip_id>
+    current_trip    trip_id
 
 TRIPS
     trip_id         number (P_KEY)
-    trip_hash       number
-    users           array<user_id>
+    trip_code       string?
+    members         array<user_id>
     leader          user_id
-    destinations    array<location_id>
+    destinations    array<array<number>>  // { latitude, longitude, travel_time }
     current_stop    number
     
-LOCATIONS
-    location_id     number (P_KEY)
-    latitude        number
-    longitude       number
-
     
 Login:
     Add user to USERS if not exist
@@ -68,5 +69,17 @@ Next destination:
     
 Arrive:
     Update current_stop in TRIPS
+    
+Finish:
+    Set current_trip to NULL for all members
 
 */
+
+
+
+
+
+
+
+
+
