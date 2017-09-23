@@ -1,3 +1,13 @@
-<div map-lazy-load="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRJ1VRQTn7e9QJaHecb9ZXGtUg4rtzIpA" map-lazy-load-params="{{googleMapsUrl}}">
-      <ng-map center="41,-87" zoom="3"></ng-map>
+Auto Complete Type:
+
+Enter an address: <br/>
+<input places-auto-complete size=80
+            ng-model="vm.address"
+            component-restrictions="{country:'us'}"
+            on-place-changed="placeChanged()" /> <br/>
+<div ng-show="vm.place">
+    Address = {{vm.place.formatted_address}} <br/>
+    Location: {{vm.place.geometry.location}}<br/>
 </div>
+address : {{vm.address}}
+<ng-map center="41,-87" zoom="3"></ng-map>

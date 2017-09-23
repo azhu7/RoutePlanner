@@ -13,12 +13,20 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope,NgMap) {
-    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCRJ1VRQTn7e9QJaHecb9ZXGtUg4rtzIpA"
+app.controller('MapCtrl', function($scope, NgMap) {
+    $scope.vm = this;
+    $scope.markers = [];
 
+    $scope.placeChanged = function() {
+        $scope.vm.place = this.getPlace();
+        marker = new google.maps.Marker({
+                position: $scope.vm.place.geometry.location,
+                map: $scope.vm.map,
+              });
+        $scope.markers.push()
+        $scope.vm.map.setCenter($scope.vm.place.geometry.location);
+    }
     NgMap.getMap().then(function(map) {
-        console.log('markers' , map.markers);
-    })
-
+        $scope.vm.map = map;
+    });
 });
-
