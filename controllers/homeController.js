@@ -21,13 +21,13 @@ app.controller('MapCtrl', function($scope, NgMap) {
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 
-    $scope.calculateRoute = function() {
-        if ($scope.locations.length) {
+    $scope.drawRoute = function() {
+        if ($scope.locations.length > 1) {
             console.log("calculating a route....")
 
             var waypts = [];
             console.log($scope.locations.length)
-            for (i=1; i < $scope.locations.length; i++){
+            for (i=1; i < $scope.locations.length - 1; i++){
                 waypts.push({
                     location: $scope.locations[i].geometry.location,
                     stopover: true
@@ -39,25 +39,23 @@ app.controller('MapCtrl', function($scope, NgMap) {
             var request = {
                 origin: $scope.locations[0].geometry.location,
                 waypoints: waypts,
-                destination: marker.position,
+                destination: $scope.locations[$scope.locations.length - 1].geometry.location,
                 optimizeWaypoints: true,
                 travelMode: google.maps.DirectionsTravelMode.DRIVING
             }
-
 
             directionsService.route(request, function(result,status) {
                 if(status == 'OK') {
                     directionsDisplay.setDirections(result)
                 }
             })
-        };
+        }
     };
 
     $scope.placeChanged = function() {
         // remove words in search bar
         $scope.address = "";
         $scope.vm.place = this.getPlace();
-        console.log($scope.vm.place.geometry.location)
         marker = new google.maps.Marker({
             position: $scope.vm.place.geometry.location,
             map: $scope.vm.map,
@@ -71,7 +69,7 @@ app.controller('MapCtrl', function($scope, NgMap) {
         $scope.vm.map.setZoom(13);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
 
-        $scope.calculateRoute();
+        $scope.drawRoute();
     };
 
     // splices the location away from locations but also
@@ -80,13 +78,13 @@ app.controller('MapCtrl', function($scope, NgMap) {
         $scope.locations.splice(index, 1);
         $scope.markers[index].setMap(null);
         $scope.markers.splice(index, 1);
-        $scope.calculateRoute();
+        $scope.drawRoute();
     };
 
     NgMap.getMap().then(function(map) {
         directionsDisplay = new google.maps.DirectionsRenderer();
         $scope.vm.map = map;
         directionsDisplay.setMap(map);
-	google.maps.event.trigger($scope.vm.map, 'resize'); 
+	    google.maps.event.trigger($scope.vm.map, 'resize');
     });
 });
