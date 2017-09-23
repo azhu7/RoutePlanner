@@ -15,34 +15,40 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 
 app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
-    $scope.markers = [];
+    $scope.locations = [];
+    var directionsDisplay;
 
     $scope.placeChanged = function() {
         $scope.vm.place = this.getPlace();
         console.log($scope.vm.place.geometry.location)
         marker = new google.maps.Marker({
-                position: $scope.vm.place.geometry.location,
-                map: $scope.vm.map,
-                draggable: true,
-                animation: google.maps.Animation.DROP,
-              });
+            position: $scope.vm.place.geometry.location,
+            map: $scope.vm.map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
 
-        if ($scope.markers.length) {
+        if ($scope.locations.length) {
+            console.log("calculating a route....")
             var request = {
-                origin: $scope.markers[$scope.markers.length - 1],
+                origin: $scope.locations[$scope.locations.length - 1].geometry.location,
                 destination: marker.position,
                 travelMode: 'DRIVING'
             }
-            directionsDisplay = new google.maps.DirectionsRenderer().route(request,function(result,status){
+            directionsService = new google.maps.DirectionsService();
+            directionsService.route(request, function(result,status) {
                 if(status == 'OK') {
-                    $scope.vm.map.setDirections(result)
+                    directionsDisplay.setDirections(result)
                 }
-             });
-        }
-        $scope.markers.push(marker)
+            })
+        };
         $scope.vm.map.setZoom(10)
+        $scope.locations.push($scope.vm.place);
+        $scope.vm.map.setCenter($scope.vm.place.geometry.location);
     }
     NgMap.getMap().then(function(map) {
+        directionsDisplay = new google.maps.DirectionsRenderer();
         $scope.vm.map = map;
+        directionsDisplay.setMap(map);
     });
 });
