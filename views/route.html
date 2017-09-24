@@ -1,8 +1,6 @@
 <div class="header"><strong>Itinerary</strong></div>
-<br />
 
 <a ui-sref="map">Edit</a>
-<br/>
 <br/>
 
 <div class="map">
@@ -10,10 +8,14 @@
 </div>
 
 <div align="center">
-<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="moveBack()">Back</button>
-<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="checkIn()">Check In</button>
-<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="moveForward()">Forward</button>
+    <button type="button" class="btn btn-primary pull-left" style="margin-top:510px;" ng-click="moveBack()">Back</button>
+    <input type="text" class="line_input" style="margin-top:510px;" value="{{ currentAddress }}"  disabled/>
+    <button type="button" class="btn btn-primary pull-right" style="margin-top:510px;" ng-click="moveForward()">Forward</button>
+</div>
+<br/>
+<div align="center">
+    <button type="button" class="btn btn-primary" style="width:60%;" ng-click="checkIn()">Check In</button>
 </div>
 <div align="center">
-    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;" ng-click="callLyft()">Call Lyft</button>
+    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call Lyft</button>
 </div>

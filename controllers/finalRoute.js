@@ -45,7 +45,8 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             } else {
                 $scope.currentLocationIdx = 0;
             }
-
+            console.log("hi: ",$scope.currentAddress)
+            $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
             console.log($scope.currentLocationIdx);
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             $scope.drawRoute();
@@ -102,6 +103,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.currentLocationIdx += 1;
         }
 
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
 
@@ -118,7 +120,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         if ($scope.currentLocationIdx > 0) {
             $scope.currentLocationIdx -= 1;
         }
-
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
 
@@ -152,8 +154,6 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
         $http.post('/api/v1/lyftride_type', params1).then(function(response){
             var ride_type_ = response.data[0];
-            console.log($scope.locations);
-            console.log($scope.currentLocationIdx);
             var params2 = {
                 ride_type: ride_type_,
                 start_lat: $scope.locations[$scope.currentLocationIdx].lat,
@@ -164,16 +164,41 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
             $http.post("/api/v1/lyftuniversal_link", params2).then(function(response){
                 console.log(response.data);
-                alert("Copy this link to your browser: " + response.data);
+                var win = window.open(response.data, '_blank');
+                win.focus();
             })
         }).catch(function(err) {
             console.log(err);
-            alert("There doesn't seem to be any Lyfts near you at this time!");
+            alert("Something went wrong while opening Lyft.");
         })
-
     }
 
+    $scope.callGoogleMaps = function() {
+        if ($scope.currentLocationIdx === $scope.locations.length - 1 || !$scope.unvisited.length) {
+            if ($scope.unvisited.length) {
+                alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
+            } else {
+                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
+            }
+            return;
+        }
 
+        var params2 = {
+            start_address: $scope.locations[$scope.currentLocationIdx].address,
+            end_address: $scope.locations[$scope.currentLocationIdx + 1].address,
+        }
+
+        console.log(params2);
+
+        $http.post("/api/v1/googleuniversal_link", params2).then(function(response){
+            console.log(response.data);
+            var win = window.open(response.data, '_blank');
+            win.focus();
+        }).catch(function(err) {
+            console.log(err);
+            alert("Something went wrong while opening Google Maps.");
+        });
+    }
 
     // init variables
     $scope.locations;
