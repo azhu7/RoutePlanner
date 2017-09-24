@@ -1,7 +1,7 @@
 app.controller('HomeCtrl', function($scope,$http,$state) {
 	$scope.submitForm = function() {
 		$http.post("/login", $scope.user).then(function(response) {
-			$state.go('map')
+			$state.go('map', {email: $scope.user.email, phone: $scope.user.phone})
 				console.log("login successful");
 		});
 		console.log("user email: " + $scope.user.email);
@@ -13,10 +13,15 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope, $http, $state, $location, NgMap) {
+app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $location, NgMap) {
 	$scope.vm = this;
 	// sets of locations and markers to render sidebar and map respectively
-	$scope.locations = [];
+
+    $scope.user = {};
+    $scope.user.email = $stateParams.email;
+    $scope.user.phone = $stateParams.phone;
+    console.log("user info: ", $scope.user);
+    $scope.locations = [];
 	$scope.markers = [];
 	$scope.path = [];
 	$scope.estimate;
@@ -138,7 +143,7 @@ app.controller('MapCtrl', function($scope, $http, $state, $location, NgMap) {
 	};
 
 	$scope.startTrip = function() {
-		var body = {'user': "jerry@umich.edu", 'path': $scope.path};
+		var body = {'user': $scope.user, 'path': $scope.path};
 		$http({
 			url: "api/v1/starttrip",
 			method: "POST",
