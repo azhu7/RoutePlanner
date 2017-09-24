@@ -206,6 +206,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         for (i = 0; i < $scope.markers.length; i++){
             $scope.markers[i].setMap(null);
         }
+        directionsDisplay.setMap(null);
         $state.go('map');
     }
 
@@ -216,3 +217,4 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 })
+
