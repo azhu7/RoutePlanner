@@ -34,7 +34,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
                 if (unvisitedIdx !== -1) {
                     // unvisited
                     console.log('Set ' + loc + ' to green!');
-                    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+                    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
                 }
 
 
@@ -95,9 +95,9 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
 
         if (unvisitedIdx !== -1) {
-            $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-        } else {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
+        } else {
+            $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
         }
 
         if($scope.currentLocationIdx < $scope.locations.length - 1) {
@@ -112,9 +112,9 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
 
         if (unvisitedIdx !== -1) {
-            $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
-        } else {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
+        } else {
+            $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
         }
 
         if ($scope.currentLocationIdx > 0) {
@@ -132,7 +132,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.unvisited.splice(unvisitedIdx,1);
             $scope.visited.push($scope.locations[$scope.currentLocationIdx]);
         }
-        $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+        $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
 
         if ($scope.unvisited.length === 0) {
             alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
@@ -194,8 +194,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
         $http.post("/api/v1/googleuniversal_link", params2).then(function(response){
             console.log(response.data);
-            var win = window.open(response.data, '_blank');
-            win.focus();
+             window.open(response.data,'_self');
         }).catch(function(err) {
             console.log(err);
             alert("Something went wrong while opening Google Maps.");
