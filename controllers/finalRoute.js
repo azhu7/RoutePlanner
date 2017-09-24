@@ -1,5 +1,5 @@
 app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
-    $http.post('/gettripinfo', $stateParams.trip_code).then(function(response) {
+    $http.post('/api/v1/gettripinfo', {trip_code: $stateParams.trip_code}).then(function(response) {
         // TODO
         // REQUIRES: optimal path
         $scope.locations = response.data.path;

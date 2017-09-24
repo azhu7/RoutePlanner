@@ -131,7 +131,7 @@ exports.starttrip = function(req, res) {
 }
 
 exports.gettripinfo = function(req, res) {
-    let trip_code = req.body;
+    let trip_code = req.body['trip_code'];
     console.log(trip_code);
     db.get_trip(trip_code, function(trip) {
         res.json(trip);
