@@ -149,17 +149,17 @@ exports.generatepath = function(req, res, next) {
 
     switch (req.body[1]) {
         case 'optimal':
-            route.optimal_route(destinations, true, function(ordering) {
+            route.optimal_route(destinations, false, function(ordering) {
                 res.send(ordering.map(function(idx) { return destinations[idx]; }));
             });
             break;
         case 'random':
-            route.random_route(destinations, true, function(ordering) {
+            route.random_route(destinations, false, function(ordering) {
                 res.send(ordering);
             });
             break;
         case 'worst':
-            route.worst_route(destinations, true, function(ordering) {
+            route.worst_route(destinations, false, function(ordering) {
                 res.send(ordering.map(function(idx) { return destinations[idx]; }));
             });
             break;

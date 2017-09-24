@@ -129,7 +129,6 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 			data: locations
 		}).then(function successCallback(response) {
 			$scope.estimate = response.data;
-			console.log($scope.estimate);
 		}, function errorCallback(response) {
 			$scope.estimate = null;
 		}).catch(function(err) {
