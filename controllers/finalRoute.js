@@ -11,6 +11,9 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         console.log($scope.visited);
         console.log($scope.unvisited);
 
+        $scope.visited.push($scope.unvisited[0]);  // Automatically visit the first location
+        $scope.unvisited.splice(0, 1);  // Visited the first location
+
         // init the map
         NgMap.getMap().then(function(map) {
             directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
@@ -37,6 +40,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
                 $scope.markers.push(marker);
             });
+
             if ($scope.visited.length) {
                 $scope.currentLocationIdx = findByLatLng($scope.visited[$scope.visited.length - 1], $scope.locations);
                 if ($scope.currentLocationIdx === -1) {
@@ -133,6 +137,11 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.visited.push($scope.locations[$scope.currentLocationIdx]);
         }
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+
+        console.log($scope.unvisited.length);
+        if ($scope.unvisited.length === 0) {
+            alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
+        }
     }
 
     $scope.callLyft = function() {
@@ -140,7 +149,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             if ($scope.unvisited.length) {
                 alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
             } else {
-                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
+                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
             }
             return;
         }
