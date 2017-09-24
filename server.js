@@ -48,8 +48,11 @@ app.post('/api/v1/gettripinfo', function(req, res) {
 app.post('/login',function(req,res,next) {
     console.log("")
     db.add_user(req.body.email)
-    db.print_collection("users")
     console.log("req.query: ",req.body);
+
+    db.print_collection('users');
+	db.print_collection('trips');
+
     res.json(200);
 })
 
