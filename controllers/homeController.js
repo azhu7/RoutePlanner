@@ -13,13 +13,14 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope, $http, NgMap) {
+app.controller('MapCtrl', function($scope, $http, $state, $location, NgMap) {
 	$scope.vm = this;
 	// sets of locations and markers to render sidebar and map respectively
 	$scope.locations = [];
 	$scope.markers = [];
 	$scope.path = [];
 	$scope.estimate;
+	$scope.path_made = false;
 
 	NgMap.getMap().then(function(map) {
 		// directionsDisplay = new google.maps.DirectionsRenderer();
@@ -106,9 +107,10 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 		}).then(function successCallback(response) {
 			$scope.path = response.data;
 			$scope.drawRoute();
+			$scope.path_made = true;
 			$scope.estimateLyftRide();
 		}, function errorCallback(response) {
-			console.log("failed to generate path"); 
+			console.log("failed to generate path");
 		});
 	};
 
@@ -123,6 +125,30 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 			console.log($scope.estimate);
 		});
 	};
+
+	$scope.startTrip = function() {
+		var body = {'user': "jerry@umich.edu", 'path': $scope.path};
+		$http({
+			url: "api/v1/starttrip",
+			method: "POST",
+			data: body
+		}).then(function successCallback(response) {
+			$scope.trip_code = response.data;
+		});
+	};
+
+	$scope.startTrip = function() {
+		var body = {'user': "jerry@umich.edu", 'path': $scope.path};
+		$http({
+			url: "api/v1/starttrip",
+			method: "POST",
+			data: body
+		}).then(function successCallback(response) {
+			$scope.trip_code = response.data;
+			$state.go('finalRoute', { trip_code:$scope.trip_code});
+		});
+	};
+
 });
 
 /* app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {
