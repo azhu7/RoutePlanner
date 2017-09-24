@@ -1,6 +1,6 @@
 /**
 db_tests.js
-Test class assessing basic db functionalities.
+Test class demonstrating basic db functionalities.
 */
 
 let db = require('../js/db.js');

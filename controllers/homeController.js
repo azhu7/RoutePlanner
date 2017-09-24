@@ -17,7 +17,6 @@ app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
     // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
-    $scope.markers = [];
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 
@@ -25,11 +24,7 @@ app.controller('MapCtrl', function($scope, NgMap) {
         if ($scope.locations.length > 1) {
             console.log("calculating a route....")
 
-            $scope.markers[0].setMap(null);
-            $scope.markers.splice(0,1);
-
             var waypts = [];
-            console.log($scope.locations.length)
             for (i=1; i < $scope.locations.length - 1; i++){
                 waypts.push({
                     location: $scope.locations[i].geometry.location,
@@ -53,14 +48,20 @@ app.controller('MapCtrl', function($scope, NgMap) {
                     directionsDisplay.setDirections(result)
                 }
             })
-        } else {
-            marker = new google.maps.Marker({
-                position: $scope.vm.place.geometry.location,
-                map: $scope.vm.map,
-                draggable: false,
-                animation: google.maps.Animation.DROP
+        } else if ($scope.locations.length === 1) {
+
+            var request = {
+                origin: $scope.locations[0].geometry.location,
+                destination: $scope.locations[0].geometry.location,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            }
+
+            directionsService.route(request, function(result,status) {
+                if(status == 'OK') {
+                    console.log("result: ", result)
+                    directionsDisplay.setDirections(result)
+                }
             })
-            $scope.markers.push(marker);
         }
     };
 
@@ -75,7 +76,7 @@ app.controller('MapCtrl', function($scope, NgMap) {
         //     animation: google.maps.Animation.DROP
         // });
 
-        $scope.vm.map.setZoom(10)
+        $scope.vm.map.setZoom(20)
         $scope.locations.push($scope.vm.place);
         // $scope.markers.push(marker);
         $scope.vm.map.setZoom(13);
@@ -88,10 +89,6 @@ app.controller('MapCtrl', function($scope, NgMap) {
     // removes the marker off the map
     $scope.removeLocation = function(index) {
         $scope.locations.splice(index, 1);
-        if ($scope.markers.length) {
-            $scope.markers[0].setMap(null);
-            $scope.markers.splice(0,1);
-        }
         // $scope.markers[index].setMap(null);
         // $scope.markers.splice(index, 1);
         $scope.drawRoute();
