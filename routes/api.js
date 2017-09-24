@@ -161,5 +161,9 @@ exports.gettripinfo = function(req, res) {
 exports.checkin = function(req, res) {
     let trip_code = req.body['trip_code'];
     let dest = req.body['dest'];
-    //db.check_in(trip_code, dest, )
+    db.check_in(trip_code, dest, function(trip_code) {
+        db.get_trip(trip_code, function(trip) {
+            res.json(trip);
+        });
+    });
 }
