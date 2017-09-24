@@ -1,6 +1,6 @@
 /**
 route_compute.js
-Set of functions for computing various routes, given an array of destinations ([latitude, longitude, address])
+Set of functions for computing various routes, given an array of destinations
 */
 
 let solver = require('node-tspsolver');

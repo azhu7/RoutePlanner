@@ -28,9 +28,9 @@ function basic_test() {
         db.add_trip_member(albert_trip_code, 'alex@', test_user_collection_name, test_trip_collection_name);
         db.add_trip_member(albert_trip_code, 'lingene@', test_user_collection_name, test_trip_collection_name);
 
-        db.check_in(alex_trip_code, test_trip_collection_name);
-        db.check_in(alex_trip_code, test_trip_collection_name);
-        db.check_in(albert_trip_code, test_trip_collection_name);
+        db.check_in(alex_trip_code, new dest(0, 0, 'd0'), test_trip_collection_name);
+        db.check_in(alex_trip_code, new dest(2, 2, 'd2'), test_trip_collection_name);
+        db.check_in(albert_trip_code, new dest(3, 3, 'd3'), test_trip_collection_name);
     }, 2000);
 
     // Print information.
