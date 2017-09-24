@@ -5,8 +5,13 @@ body {
 	font-family: 'Raleway', sans-serif;
 }
 
-h2, h4 {
+h1, h2, h3, h4, h5, h6 {
 	font-family: 'Mosk Bold 700';
+}
+
+h3 {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 h4 {
@@ -57,9 +62,9 @@ body {
 }
 
 ng-map {
-	position: absolute;
-	height: 500px;
-	width: 97%;
+	/*position: absolute;*/
+	height: 400px;
+	/*width: 97%;*/
 }
 
 .mapDiv {
@@ -105,7 +110,7 @@ ng-map {
 }
 
 #call_lyft_button {
-	margin-top: 510px;
+	/*margin-top: 510px;*/
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border-radius: 20px 20px 20px 20px;
@@ -120,7 +125,7 @@ ng-map {
 
 #start_trip_button {
 	display: inline-block;
-	margin-top: 510px;
+	/*margin-top: 510px;*/
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border-radius: 20px 20px 20px 20px;
@@ -132,7 +137,7 @@ ng-map {
 	outline: 0;
 }
 
-select {
+.select {
 	box-shadow: none;
 	background: transparent;
 	border: 1px solid #e6e6e6;

@@ -1,20 +1,29 @@
-<div class="header"><strong>Itinerary</strong></div>
-<button class="btn btn-primary" ng-click="edit()">Edit </button>
-<br/>
+<div class="header" align="center"><h3>Itinerary</h3></div>
+<div class="container">
+    <button class="btn btn-primary" ng-click="edit()">Edit </button>
+    <div class="map row">
+        <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
+    </div>
 
-<div class="map">
-    <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
-</div>
-
-<div align="center">
-    <button type="button" class="btn btn-primary pull-left" style="margin-top:510px;" ng-click="moveBack()">Back</button>
-    <input type="text" class="line_input" style="margin-top:510px;text-align:center;" value="{{ currentAddress }}"  disabled/>
-    <button type="button" class="btn btn-primary pull-right" style="margin-top:510px;" ng-click="moveForward()">Forward</button>
-</div>
-<br/>
-<div align="center">
-    <button type="button" class="btn btn-primary" style="width:60%;" ng-click="checkIn()">Check In</button>
-</div>
-<div align="center">
-    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call Lyft</button>
+    <div class="row" align="center">
+        <div class="col-sm-6 col-sm-offset-3">
+            <button type="button" class="btn btn-primary pull-left" ng-click="moveBack()">
+                Back
+            </button>
+            <input type="text" class="line_input" style="text-align:center;" value="{{ currentAddress }}"  disabled/>
+            <button type="button" class="btn btn-primary pull-right" ng-click="moveForward()">
+                Forward
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-primary" style="width:60%;" ng-click="checkIn()">Check In</button>
+            </div>
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call Lyft</button>    
+            </div>
+        </div>
+    </div>
 </div>
