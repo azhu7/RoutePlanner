@@ -13,7 +13,7 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormModal) {
+app.controller('MapCtrl', function($scope, $http, NgMap) {
     $scope.vm = this;
     // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
@@ -100,14 +100,35 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
 	    google.maps.event.trigger($scope.vm.map, 'resize');
     });
 
+	// makes backend request to find fastest route and call lyft
+	$scope.findShortestRoute = function() {
+	   var input = [$scope.locations, $scope.option];
+	   $http({
+	       url: "api/v1/generatepath",
+	       method: "POST",
+	       data: input
+	   }).then(function successCallback(response) {
+	       console.log(response.data);
+	   });
 
-    	$scope.openModal = function() {
-		$rootScope.locations = $scope.locations;
-		RouteFormModal.open();
+	   $scope.estimateLyftRide();
+	};
+
+	$scope.estimateLyftRide = function() {
+	   var locations = $scope.locations;
+	   console.log($scope.locations);
+	   $http({
+	       url: "api/v1/lyftestimate",
+	       method: "POST",
+	       data: locations
+	   }).then(function successCallback(response) {
+	       console.log("Success in estimating Lyft!");
+	       console.log(response.data);
+	   });
 	};
 });
 
-app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {
+/* app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {
 	$scope.cancel = $uibModalInstance.close;
 	$scope.locations = $rootScope.locations;
 
@@ -156,4 +177,4 @@ app.factory('RouteFormModal', function($rootScope, $uibModal) {
 	return {
 		open: open
 	};
-});
+}); */
