@@ -12,8 +12,8 @@ let default_user_collection_name = 'users';
 let default_trip_collection_name = 'trips';
 
 module.exports = {
+    // Connect to MongoDB, initializing and creating unique indexes for the specified user and trip collections.
     open: function(user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
-        // Connect to MongoDB.
         MongoClient.connect(url, function(err, db_) {
             if (err) throw err;
             db = db_;

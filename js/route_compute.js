@@ -5,10 +5,53 @@ Set of functions for computing various routes, given an array of destinations
 
 let solver = require('node-tspsolver');
 let estimator = require('./lyft.js');
-let dest = require('./utility.js').dest;
 let distance = require('google-distance-matrix');
 distance.key('AIzaSyDXlg2yAdgUtISR7VqeNUkH6LjehNaszaQ');
 distance.units('imperial');
+
+module.exports = {
+    optimal_route: function(destinations, round_trip, callback) {
+        get_cost_matrix(destinations, function(cost_matrix) {
+            tsp(destinations, cost_matrix, round_trip, callback);
+        });
+    },
+
+    worst_route: function(destinations, round_trip, callback) {
+        get_cost_matrix(destinations, function(cost_matrix) {
+            //Invert to make "best" paths "worst" and vice versa
+            for (let i = 0; i < cost_matrix.length; i++) {
+                for (let j = 0; j < cost_matrix.length; j++) {
+                    cost_matrix[i][j] = 100 / cost_matrix[i][j];
+                }
+            }
+
+            tsp(destinations, cost_matrix, round_trip, callback);
+        });
+    },
+
+    random_route: function(destinations, callback) {
+        let counter = destinations.length;
+
+        while (counter > 0) {
+            let index = Math.floor(Math.random() * counter);
+            counter--;
+            let temp = destinations[counter];
+            destinations[counter] = destinations[index];
+            destinations[index] = temp;
+        }
+
+        callback(destinations);
+    }
+}
+
+// Given destinations and a cost matrix, compute the optimal path.
+function tsp(destinations, cost_matrix, round_trip, callback) {
+    solver
+        .solveTsp(cost_matrix, round_trip, {})
+        .then(function(result) {
+            callback(result.map(function(idx) { return destinations[idx]; }));
+        });
+}
 
 // Given an array of destinations ([latitude, longitude, address]), 
 // return a matrix of costs.
@@ -46,74 +89,3 @@ function get_cost_matrix(destinations, callback) {
         }
     });
 }
-
-function optimal_route(destinations, round_trip, callback) {
-    get_cost_matrix(destinations, function(cost_matrix) {
-        for (let i = 0; i < cost_matrix.length; i++) {
-            console.log(cost_matrix[i]);
-        }
-
-        tsp(destinations, cost_matrix, round_trip, callback);
-    });
-}
-
-function worst_route(destinations, round_trip, callback) {
-    get_cost_matrix(destinations, function(cost_matrix) {
-        //Invert to make "best" paths "worst" and vice versa
-        for (let i = 0; i < cost_matrix.length; i++) {
-            for (let j = 0; j < cost_matrix.length; j++) {
-                cost_matrix[i][j] = 100 / cost_matrix[i][j];
-            }
-        }
-
-        for (let i = 0; i < cost_matrix.length; i++) {
-            console.log(cost_matrix[i]);
-        }
-
-        tsp(destinations, cost_matrix, round_trip, callback);
-    });
-}
-
-function tsp(destinations, cost_matrix, round_trip, callback) {
-    solver
-        .solveTsp(cost_matrix, round_trip, {})
-        .then(function(result) {
-            callback(result.map(function(idx) { return destinations[idx]; }));
-        });
-}
-
-function random_route(destinations, callback) {
-    let counter = destinations.length;
-
-    while (counter > 0) {
-        let index = Math.floor(Math.random() * counter);
-        counter--;
-        let temp = destinations[counter];
-        destinations[counter] = destinations[index];
-        destinations[index] = temp;
-    }
-
-    callback(destinations);
-}
-
-optimal_route([new dest(37, -121, "d1"), new dest(37.1, -122, "d2"), new dest(37.0250, -122, "d3"), new dest(37.2, -122, "d4")], false, function(result) {
-    console.log("OPTIMAL:");
-    console.log(result);
-});
-
-worst_route([new dest(37, -121, "d1"), new dest(37.1, -122, "d2"), new dest(37.0250, -122, "d3"), new dest(37.2, -122, "d4")], false, function(result) {
-    console.log("WORST:");
-    console.log(result);
-});
-
-// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-//     console.log(result);
-// });
-
-// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-//     console.log(result);
-// });
-
-// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-//     console.log(result);
-// });
