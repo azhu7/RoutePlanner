@@ -193,8 +193,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         }
 
         $http.post("/api/v1/googleuniversal_link", params2).then(function(response){
-            console.log(response.data);
-            window.open(response.data,'_blank');
+            var win = window.open(response.data,'_blank');
             win.focus();
         }).catch(function(err) {
             console.log(err);

@@ -131,7 +131,7 @@ exports.googleuniversal_link = function(req, res) {
     let end_addr = req.body['end_address'].split(' ').join('+');
 
     let link = 'https://google.com/maps/dir/' + start_addr + '/' + end_addr + '/';
-    console.log(link);
+
     res.json(link);
 }
 
