@@ -14,7 +14,6 @@ let apiInstance = new lyft.PublicApi();
 
 exports.lyftestimate = function(req, res) {
     let destinations = req.body;
-    console.log(destinations);
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
     let est_time_hours = 0;
@@ -35,13 +34,20 @@ exports.lyftestimate = function(req, res) {
 
     Promise.all(asynCalls)
         .then((data) => {
+            let num_valid_data = 0;
             for (let i = 0; i < data.length; ++i) {
                 let d = data[i]["cost_estimates"];
+
+                if (d.length != 0) {
+                    num_valid_data++;
+                }
+
                 for (let j = 0; j < d.length; ++j) {
                     let estimate = d[j];
                     if (estimate["ride_type"] !== "lyft") {
                         continue;
                     }
+
                     est_cost_cents_min += estimate["estimated_cost_cents_min"];
                     est_cost_cents_max += estimate["estimated_cost_cents_max"];
                     est_time_hours += estimate["estimated_duration_seconds"];
@@ -49,17 +55,23 @@ exports.lyftestimate = function(req, res) {
                 }
             }
 
-            res.json({
-                estimate: {
-                    est_cost_cents_min: est_cost_cents_min/100,
-                    est_cost_cents_max: est_cost_cents_max/100,
-                    est_time_hours: est_time_hours/3600,
-                    est_dist_miles: est_dist_miles
-                }
-            });
+            if (num_valid_data < destinations.length - 1) {
+                // Bad request if any pair is too far to Lyft
+                res.sendStatus(400);
+            }
+            else {
+                res.json({
+                    estimate: {
+                        est_cost_cents_min: est_cost_cents_min/100,
+                        est_cost_cents_max: est_cost_cents_max/100,
+                        est_time_hours: est_time_hours/3600,
+                        est_dist_miles: est_dist_miles
+                    }
+                });
+            }
         })
         .catch((e) => {
-            res.json(400);
+            res.sendStatus(400);
         });
 }
 
@@ -71,7 +83,7 @@ exports.lyftride_type = function(req, res) {
         for (let i = 0; i < ride_types.length; ++i) {
             types.push(ride_types[i]["ride_type"]);
         }
-        
+
         res.json(types);
     }, (error) => {
         throw error;
