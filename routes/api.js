@@ -126,6 +126,15 @@ exports.lyftuniversal_link = function(req, res) {
     res.json(link);
 }
 
+exports.googleuniveresal_link = function(req, res) {
+    let start_addr = req.body['start_address'].split(' ').join('+');
+    let end_addr = req.body['end_address'].split(' ').join('+');
+
+    let link = 'https://google.com/maps/dir/' + start_addr + '/' + end_addr + '/';
+    console.log(link);
+    res.json(link);
+}
+
 exports.generatepath = function(req, res, next) {
     let destinations = [];
     for (let i = 0; i < req.body[0].length; ++i) {
@@ -162,7 +171,7 @@ exports.starttrip = function(req, res) {
     let destinations = req.body['path'];
 
     let trip_code = db.add_trip(leader, destinations);
-    res.json({ trip_code: trip_code });
+    res.json(trip_code);
 }
 
 exports.gettripinfo = function(req, res) {
