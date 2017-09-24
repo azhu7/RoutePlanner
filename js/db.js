@@ -35,11 +35,11 @@ module.exports = {
     // Add user to users collection. No effect if user already exists.
     add_user: function(email_, phone_, collection_name=default_user_collection_name) {
         let query = { email: email_ };
-        let new_user = { $setOnInsert: { 
+        let new_user = { $setOnInsert: {
             email: email_,
             phone: phone_,
             trips: [],
-            current_trip: null 
+            current_trip: null
         }};
 
         db.collection(collection_name).update(query, new_user, {upsert: true}, function(err, res) {
@@ -80,12 +80,12 @@ module.exports = {
             travel_times: [],
             next_dest: destinations_[0]
         };
-        
+
         db.collection(trip_collection_name).insertOne(new_trip, function(err, trip) {
             if (err) throw err;
             console.log('db: Created new trip ' + new_trip['trip_code'] + ' for ' + leader_);
         });
-        
+
         module.exports.add_user_trip(leader_, new_trip['trip_code'], user_collection_name);
         return new_trip['trip_code'];
     },
@@ -98,7 +98,7 @@ module.exports = {
             if (err) throw err;
             console.log('db: Added new trip member: ' + email + ' to trip ' + trip_code_);
         });
-        
+
         module.exports.add_user_trip(email, trip_code_, user_collection_name);
     },
 
@@ -146,7 +146,7 @@ module.exports = {
             });
         });
     },
- 
+
     // Print contents of specified collection.
     print_collection: function(name) {
         db.collection(name).find({}).toArray(function(err, result) {
@@ -201,19 +201,19 @@ TRIPS
     visited         array<dest>     // [{ lat, lng, address }..], sorted in check-in order
     travel_times    array<number>   // unused, correponds to destinations
     next_dest       dest
-    
+
 Login:
     Add user to USERS if not exist
 
 Begin trip:
     Save trip info to TRIPS
-    
+
 Next destination:
     Query trip destination from TRIPS
-    
+
 Arrive:
     Update current_stop in TRIPS
-    
+
 Finish:
     Set current_trip to NULL for all members
 
