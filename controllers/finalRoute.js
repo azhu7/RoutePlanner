@@ -12,14 +12,14 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
         // init the map
         NgMap.getMap().then(function(map) {
-            directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: false});
+            directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
             $scope.map = map;
             directionsDisplay.setMap(map);
             google.maps.event.trigger(map, 'resize');
 
             angular.forEach($scope.locations, function(loc) {
                 var marker = new google.maps.Marker({
-                    position: {lat: loc.lng, lng: loc.lat},
+                    position: {lat: loc.lat, lng: loc.lng},
                     map: map,
                     draggable: false,
                     animation: google.maps.Animation.DROP
@@ -29,6 +29,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
                 if (unvisitedIdx !== -1) {
                     // unvisited
+                    console.log('Set ' + loc + ' to green!');
                     marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
                 }
 
@@ -88,10 +89,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
 
     $scope.moveForward = function() {
-        // TODO
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
-
-        console.log('Move forward: ' + $scope.currentLocationIdx);
 
         if (unvisitedIdx !== -1) {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -99,7 +97,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
         }
 
-        if($scope.currentLocationIdx < $scope.locations.length) {
+        if($scope.currentLocationIdx < $scope.locations.length - 1) {
             $scope.currentLocationIdx += 1;
         }
 
@@ -108,10 +106,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
 
     $scope.moveBack = function() {
-        // TODO
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
-
-        onsole.log('Move back: ' + $scope.currentLocationIdx);
 
         if (unvisitedIdx !== -1) {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
@@ -138,8 +133,8 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     }
 
     $scope.callLyft = function() {
-        if ($scope.currentLocationIdx === $scope.locations.length - 1) {
-            if (!$scope.unvisited.length) {
+        if ($scope.currentLocationIdx === $scope.locations.length - 1 || !$scope.unvisited.length) {
+            if ($scope.unvisited.length) {
                 alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
             } else {
                 alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
