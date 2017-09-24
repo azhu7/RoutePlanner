@@ -4,11 +4,10 @@ Set of functions for computing various routes, given an array of destinations ([
 */
 
 let solver = require('node-tspsolver');
-let estimator = require('./lyft.js')
-
-function get_cost(start, end) {
-    return 1;
-}
+let estimator = require('./lyft.js');
+let distance = require('google-distance-matrix');
+distance.key('AIzaSyDXlg2yAdgUtISR7VqeNUkH6LjehNaszaQ');
+distance.units('imperial');
 
 // Given an array of destinations ([latitude, longitude, address]), 
 // return a matrix of costs.
@@ -18,48 +17,68 @@ function get_cost_matrix(destinations, callback) {
         cost_matrix[i] = new Array(destinations.length);
     }
 
-    for (let start = 0; start < destinations.length; start++) {
-        cost_matrix[start][start] = 0;  // Costs nothing to travel to itself
-        for (let end = start + 1; end < destinations.length; end++) {
-            let cost = get_cost(destinations[start], destinations[end]);
-            cost_matrix[start][end] = cost;
-            cost_matrix[end][start] = cost;
+    var start = destinations.map(function(item) { return [item[0] + ',' + item[1]]; });
+    var end = destinations.map(function(item) { return [item[0] + ',' + item[1]]; });
+
+    distance.matrix(start, end, function(err, distances) {
+        if (err) throw err;
+        if (!distances) throw 'No distances';
+        else if (distances.status === 'OK') {
+            for (var i = 0; i < start.length; i++) {
+                for (var j = i + 1; j < end.length; j++) {
+                    var origin = distances.origin_addresses[i];
+                    var destination = distances.destination_addresses[j];
+                    if (distances.rows[0].elements[j].status == 'OK') {
+                        var distance = distances.rows[i].elements[j].distance.text;
+                        //console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
+                        cost_matrix[i][j] = parseFloat(distance.slice(0, distance.length - 3));
+                        cost_matrix[j][i] = parseFloat(distance.slice(0, distance.length - 3));
+                    } else {
+                        throw (destination + ' is not reachable by land from ' + origin);
+                    }
+                }
+
+                cost_matrix[i][i] = 0.01;
+            }
+
+            callback(cost_matrix);
         }
-    }
-
-    // for (let i = 0; i < cost_matrix.length; i++) {
-    //     for (let j = 0; j < cost_matrix.length; j++) {
-    //         console.log(cost_matrix[i][j] + ' ');
-    //     }
-    //     console.log('\n');
-    // }
-
-    return cost_matrix;
+    });
 }
 
 function optimal_route(destinations, round_trip, callback) {
-    solver
-        .solveTsp(get_cost_matrix(destinations), round_trip, {})
-        .then(function(result) {
-            callback(result);
-        });
+    get_cost_matrix(destinations, function(cost_matrix) {
+        for (let i = 0; i < cost_matrix.length; i++) {
+            console.log(cost_matrix[i]);
+        }
+
+        tsp(destinations, cost_matrix, round_trip, callback);
+    });
 }
 
 function worst_route(destinations, round_trip, callback) {
-    let cost_matrix = get_cost_matrix(destinations);
-
-    // Invert to make "best" paths "worst" and vice versa
-    for (let i = 0; i < cost_matrix.length; i++) {
-        for (let j = 0; j < cost_matrix.length; j++) {
-            cost_matrix[i][j] *= -1;
+    get_cost_matrix(destinations, function(cost_matrix) {
+        //Invert to make "best" paths "worst" and vice versa
+        for (let i = 0; i < cost_matrix.length; i++) {
+            for (let j = 0; j < cost_matrix.length; j++) {
+                cost_matrix[i][j] = 100 / cost_matrix[i][j];
+            }
         }
-    }
 
+        for (let i = 0; i < cost_matrix.length; i++) {
+            console.log(cost_matrix[i]);
+        }
+
+        tsp(destinations, cost_matrix, round_trip, callback);
+    });
+}
+
+function tsp(destinations, cost_matrix, round_trip, callback) {
     solver
         .solveTsp(cost_matrix, round_trip, {})
         .then(function(result) {
-            callback(result);
-        })
+            callback(result.map(function(idx) { return destinations[idx]; }));
+        });
 }
 
 function random_route(destinations, callback) {
@@ -76,23 +95,24 @@ function random_route(destinations, callback) {
     callback(destinations);
 }
 
-optimal_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], true, function(result) {
+optimal_route([[37, -121, "d1"], [37.1, -122, "d2"], [37.0250, -122, "d3"], [37.2, -122, "d4"]], false, function(result) {
+    console.log("OPTIMAL:");
     console.log(result);
 });
 
-worst_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], true, function(result) {
+worst_route([[37, -121, "d1"], [37.1, -122, "d2"], [37.0250, -122, "d3"], [37.2, -122, "d4"]], false, function(result) {
+    console.log("WORST:");
     console.log(result);
 });
 
-random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-    console.log(result);
-});
+// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
+//     console.log(result);
+// });
 
-random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-    console.log(result);
-});
+// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
+//     console.log(result);
+// });
 
-random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
-    console.log(result);
-});
-
+// random_route([[0, 0, "d1"], [1, 1, "d2"], [2, 2, "d3"]], function(result) {
+//     console.log(result);
+// });
