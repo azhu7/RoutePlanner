@@ -1,5 +1,6 @@
 let route = require('../js/route_compute.js');
 let dest = require('../js/utility.js').dest;
+let db = require('../js/db.js');
 let lyft = require('node-lyft');
 let defaultClient = lyft.ApiClient.instance;
 
@@ -117,4 +118,14 @@ exports.generatepath = function(req, res, next) {
             res.send(destinations);
             break;
     }
+}
+
+exports.starttrip = function(req, res) {
+    console.log(req.body);
+
+    let leader = req.body['user'];
+    let destinations = req.body['path'];
+
+    let trip_code = db.add_trip(leader, destinations);
+    res.json({ trip_code: trip_code });
 }
