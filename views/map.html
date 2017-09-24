@@ -36,14 +36,14 @@
 				<button id="start_trip_button" class="center-block" type="submit" ng-click="startTrip()" ng-if="path_made">
 					Start Trip
 				</button>
+			</div>
+		</div>
 				<div id="estimate_info" ng-if="path_made">
 					<h5>ESTIMATES</h5>
-					<p>Time: {{estimate.est_time_hours}}</p>
+					<p>Time: {{estimate.est_time_hours | unitChange}}</p>
 					<p>Distance: {{estimate.est_dist_miles}}</p>
 					<p>Price: {{estimate.est_cost_cents_min}} to {{estimate.est_cost_cents_max}}</p>
 				</div>
-			</div>
-		</div>
 	</div>
 
 </div>

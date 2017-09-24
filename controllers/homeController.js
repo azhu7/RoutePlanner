@@ -159,6 +159,15 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 
 });
 
+app.filter('unitChange', function() {
+		return function(input) {
+			if (input == null) {
+				return '';
+			}
+			return parseFloat(input.toFixed(2));
+		};	
+});
+
 /* app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {
    $scope.cancel = $uibModalInstance.close;
    $scope.locations = $rootScope.locations;
