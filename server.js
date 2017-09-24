@@ -37,6 +37,10 @@ app.get('/api/v1/lyftuniversal_link', function(req, res) {
     api.lyftuniversal_link(req,res);
 })
 
+app.post('/api/v1/gettripinfo', function(req, res) {
+	api.gettripinfo(req,res);
+});
+
 app.post('/login',function(req,res,next) {
     console.log("")
     db.add_user(req.body.email)
