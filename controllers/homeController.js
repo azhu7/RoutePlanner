@@ -116,14 +116,14 @@ app.controller('RouteFormController', function($rootScope, $scope, $http, $uibMo
 
 	// makes backend request to find fastest route and call lyft
 	$scope.findShortestRoute = function() {
-	console.log($scope.option);
-	   /*$http({
-	       url: ,
-	       method: "GET",
-	       data: $scope.locations
+	   var input = [$scope.locations, $scope.option];
+	   $http({
+	       url: "api/v1/generatepath",
+	       method: "POST",
+	       data: input
 	   }).then(function successCallback(response) {
-	       console.log("error finding shortest route");
-	   }); */
+	       console.log("Success!");
+	   }); 
 	    $scope.cancel();
 	}; 
 });
