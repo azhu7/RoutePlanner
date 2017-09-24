@@ -97,6 +97,10 @@ ng-map {
 	padding-bottom: 10px;
 }
 
+.required {
+    color: red;
+}
+
 .remove_location {
 	border: none;
 	font-weight: 100;

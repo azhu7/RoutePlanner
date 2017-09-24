@@ -1,6 +1,12 @@
 app.controller('HomeCtrl', function($scope,$http,$state) {
 	$scope.submitForm = function() {
-		$http.post("/login", $scope.user).then(function(response) {
+		if ($scope.user.trip_code) {
+            console.log("trip code used...");
+            $state.go('finalRoute',{trip_code: $scope.user.trip_code});
+        }
+
+
+        $http.post("/login", $scope.user).then(function(response) {
 			$state.go('map', {email: $scope.user.email, phone: $scope.user.phone})
 				console.log("login successful");
 		});
