@@ -1,5 +1,4 @@
 app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
-    console.log("hey", $stateParams)
     $http.post('/api/v1/gettripinfo', {trip_code: $stateParams.trip_code}).then(function(response) {
 
         $scope.locations = response.data.path;
@@ -201,6 +200,13 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             console.log(err);
             alert("Something went wrong while opening Google Maps.");
         });
+    }
+
+    $scope.edit = function() {
+        for (i = 0; i < $scope.markers.length; i++){
+            $scope.markers[i].setMap(null);
+        }
+        $state.go('map');
     }
 
     // init variables
