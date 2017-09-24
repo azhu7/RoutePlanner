@@ -20,11 +20,6 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
 	$scope.markers = [];
 	var directionsDisplay;
 	var directionsService = new google.maps.DirectionsService();
-	$scope.data = {static: true};
-	$scope.panes = [
-	{ title:"Dynamic Title 1", content:"Dynamic content 1" },
-	{ title:"Dynamic Title 2", content:"Dynamic content 2" }
-	];
 
 	$scope.drawRoute = function() {
 		if ($scope.locations.length > 1) {

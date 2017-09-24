@@ -1,4 +1,5 @@
 let lyft = require('node-lyft');
+let dest = require('./utility').dest;
 let defaultClient = lyft.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: Client Authentication
@@ -7,12 +8,6 @@ clientAuth.accessToken = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2
 
 let apiInstance = new lyft.PublicApi();
 
-function dest(lat, lng, address) {
-    this.lat = lat;
-    this.lng = lng;
-    this.address = address;
-}
-
 function estimate(min_price, max_price, time, miles) {
     this.min_price = min_price;
     this.max_price = max_price;
@@ -20,8 +15,21 @@ function estimate(min_price, max_price, time, miles) {
     this.miles = miles;
 }
 
+function getAvailableRideTypes(dest) {
+    apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
+        let types = [];
+        ride_types = data["ride_types"];
+        for (let i = 0; i < ride_types.length; ++i) {
+            types.push(ride_types[i]["ride_type"]);
+        }
+        return types;
+    }, (error) => {
+        throw error;
+    });
+}
+
 // takes in array of dest objects, calculates estimates using ride_type lyft
-function getRideEstimate(destinations, callback) {
+function getRideEstimate(destinations) {
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
     let est_time_seconds = 0;
@@ -57,19 +65,23 @@ function getRideEstimate(destinations, callback) {
             }
 
             let obj = new estimate(est_cost_cents_min/100, est_cost_cents_max/100, est_time_seconds/3600, est_dist_miles);
-            callback(obj);
+            return obj;
         })
         .catch((e) => {
             throw e;
         });
 }
 
-/* Test Case */
-// let d1 = new dest(37.7763, -122.3918, "blah");
-// let d2 = new dest(37.7721, -122.4533, "blah");
-// let d3 = new dest(37.2341, -122.1029, "blah");
-// let d4 = new dest(37.2352, -122.1032, "blah");
-// let arr = [d1, d2, d3, d4];
-// getRideEstimate(arr, function(res) {
-//     console.log(res);
-// });
+/* Test Cases */
+let d1 = new dest(37.7763, -122.3918, "blah");
+let d2 = new dest(37.7721, -122.4533, "blah");
+let d3 = new dest(37.2341, -122.1029, "blah");
+let d4 = new dest(37.2352, -122.1032, "blah");
+let arr = [d1, d2, d3, d4];
+getRideEstimate(arr);
+
+/*getAvailableRideTypes(d1).then((obj) => {
+    console.log(obj);
+}).catch((e) => {
+    console.log(e);
+});*/
