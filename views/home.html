@@ -4,12 +4,16 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
-            <label for="email">Email</label>
-            <input name="email" class="form-control" id="email" type="email" placeholder="JohnDoe@gmail.com" ng-model="user.email" required/>
+            <label for="email">Email <i ng-if="!user.trip_code" class="required">*</i></label>
+            <input name="email" class="form-control" id="email" type="email" placeholder="JohnDoe@gmail.com" ng-model="user.email" ng-required="!user.trip_code" />
         </div>
         <div class="form-group">
             <label for="phone"> Phone Number</label>
             <input name="phone" class="form-control" id="phone" type="text" placeholder="111-222-3333" ng-model="user.phone" maxlength="12" minlength="12" />
+        </div>
+        <div class="form-group">
+            <label for="trip_code">Trip ID</label>
+            <input name="trip_code" class="form-control" id="trip_code" type="text" placeholder="a6b0z2" ng-model="user.trip_code" />
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary pull-right submit-btn" value="Sign In"/>

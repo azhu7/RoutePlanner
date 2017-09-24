@@ -131,7 +131,7 @@ exports.googleuniversal_link = function(req, res) {
     let end_addr = req.body['end_address'].split(' ').join('+');
 
     let link = 'https://google.com/maps/dir/' + start_addr + '/' + end_addr + '/';
-    console.log(link);
+
     res.json(link);
 }
 
@@ -191,6 +191,7 @@ exports.gettripinfo = function(req, res) {
 exports.checkin = function(req, res) {
     let trip_code = req.body['trip_code'];
     let dest = req.body['dest'];
+    console.log(trip_code + " " + dest);
     db.check_in(trip_code, dest, function(trip_code) {
         db.get_trip(trip_code, function(trip) {
             res.json(trip);

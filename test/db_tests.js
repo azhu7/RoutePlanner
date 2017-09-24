@@ -79,12 +79,6 @@ function basic_test() {
         db.print_collection(test_trip_collection_name);
     }, 3000);
 
-    // Delete collections.
-    setTimeout(function() {
-        //db.drop_collection(test_user_collection_name);
-        //db.drop_collection(test_trip_collection_name);
-    }, 5000);
-
     // Close MongoClient
     setTimeout(function() {
         db.close();
