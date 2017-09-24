@@ -6,8 +6,8 @@ Test class demonstrating basic db functionalities.
 let db = require('../js/db.js');
 let dest = require('../js/utility.js').dest;
 
-let test_user_collection_name = 'users_test';
-let test_trip_collection_name = 'trips_test';
+let test_user_collection_name = 'users';
+let test_trip_collection_name = 'trips';
 
 function basic_test() {
     db.open(test_user_collection_name, test_trip_collection_name);
@@ -51,8 +51,8 @@ function basic_test() {
 
     // Delete collections.
     setTimeout(function() {
-        db.drop_collection(test_user_collection_name);
-        db.drop_collection(test_trip_collection_name);
+        // db.drop_collection(test_user_collection_name);
+        // db.drop_collection(test_trip_collection_name);
     }, 5000);
 
     // Close MongoClient
