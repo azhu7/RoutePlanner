@@ -8,7 +8,8 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 
 // configuration =================
-var db = require('./js/db.js')
+var db = require('./js/db.js');
+var api = require('./routes/api.js');
 db.open();
 // mongoose.connect('mongodb://node:nodeuser@mongo.onmodulus.net:27017/uwO3mypu');     // connect to mongoDB database on modulus.io
 
@@ -31,6 +32,10 @@ app.get('*',function(req,res) {
     res.sendFile( __dirname + '/index.html');
 })
 
+// API
+app.get('/api/v1/lyftestimate', api.lyftestimate);
+app.get('/api/v1/lyftride_type', api.lyftride_type);
+app.post('/api/v1/generatepath', api.generatepath);
 
 // listen (start app with node server.js) ======================================
 app.listen(8080);
