@@ -19,37 +19,40 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 	$scope.locations = [];
 	$scope.markers = [];
 	$scope.path = [];
+	$scope.estimate;
 
 	NgMap.getMap().then(function(map) {
 		// directionsDisplay = new google.maps.DirectionsRenderer();
 		$scope.vm.map = map;
 		// directionsDisplay.setMap(map);
 		google.maps.event.trigger($scope.vm.map, 'resize');
+		directionsDisplay.setMap($scope.vm.map);
 	});
 
 	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	var directionsService = new google.maps.DirectionsService;
-	directionsDisplay.setMap($scope.vm.map);
+
 
 	$scope.drawRoute = function() {
 		if ($scope.path.length > 1) {
 			console.log("calculating a route....")
 
 			var latlngs = [];
-			var start = new google.maps.LatLng($scope.path[0].lat, $scope.path[0].lng);
-			for (var i=1; i < $scope.path.length - 1; i++){
+			for (var i=1; i < $scope.path.length - 1; i++) {
 				latlngs.push({
-					location: new google.maps.LatLng($scope.path[i].lat, $scope.path[i].lng),
-					stopover: true
+					location: {lat: $scope.path[i].lat, lng: $scope.path[i].lng},
+					stopover: false
 				});
 			}
 
 			console.log("way: ", latlngs);
 
+			var first = {lat: $scope.path[0].lat, lng: $scope.path[0].lng};
+			var second = {lat: $scope.path[$scope.path.length-1].lat, lng: $scope.path[$scope.path.length-1].lng};
 			var request = {
-				origin: start,
+				origin: first,
 				waypoints: latlngs,
-				destination: $scope.path[$scope.path.length-1],
+				destination: second,
 				optimizeWaypoints: true,
 				travelMode: google.maps.DirectionsTravelMode.DRIVING
 			};
@@ -103,6 +106,7 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 		}).then(function successCallback(response) {
 			$scope.path = response.data;
 			$scope.drawRoute();
+			$scope.estimateLyftRide();
 		}, function errorCallback(response) {
 			console.log("failed to generate path"); 
 		});
@@ -115,8 +119,8 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 			method: "POST",
 			data: locations
 		}).then(function successCallback(response) {
-			console.log("Success in estimating Lyft!");
-			console.log(response.data);
+			$scope.estimate = response.data;
+			console.log($scope.estimate);
 		});
 	};
 });
