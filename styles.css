@@ -47,7 +47,6 @@ ng-map {
 }
 
 #map_lookup {
-	margin-left: 10px;
 	width: 100%;
 	padding: 10px;
 }
@@ -61,8 +60,6 @@ ng-map {
 #locations_list li {
 	margin-top: 10px;
 	width: 100%;
-	padding-top: 20px;
-	padding-bottom: 20px;
 	background-color: #f2f2f2;
 	font-size: 15px;
 	padding-top: 10px;
@@ -73,4 +70,23 @@ ng-map {
 	border: none;
 	font-weight: 100;
 	background-color: #f2f2f2;
+}
+
+#call_lyft_button {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-radius: 20px 20px 20px 20px;
+	z-index: 999;
+	width: 100%;
+	background-color: #AA00FF;
+	color: white;
+	border: none;
+	font-size: 15px;
+	outline: 0;
+}
+
+/* modal options */
+.modal-header {
+	color: white;
+	background-color:#00ACC1;
 }
