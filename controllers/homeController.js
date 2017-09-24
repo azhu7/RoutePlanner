@@ -150,6 +150,9 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 			data: body
 		}).then(function successCallback(response) {
 			$scope.trip_code = response.data;
+            for (i=0; i < $scope.markers.length; i++) {
+		        $scope.markers[i].setMap(null);
+            }
 			$state.go('finalRoute', { trip_code:$scope.trip_code});
 		});
 	};
