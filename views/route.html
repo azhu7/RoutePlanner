@@ -7,16 +7,17 @@
 </div>
 
 <div align="center">
-    <button type="button" class="btn btn-primary pull-left" style="margin-top:510px;" ng-click="moveBack()">Back</button>
+    <button type="button" class="btn btn-primary" ng-click="moveBack()"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
     <input type="text" class="line_input" style="margin-top:510px;text-align:center;" value="{{ currentAddress }}"  disabled/>
-    <button type="button" class="btn btn-primary pull-right" style="margin-top:510px;" ng-click="moveForward()">Forward</button>
+    <button type="button" class="btn btn-primary" ng-click="moveForward()"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
 </div>
 <br/>
 <div align="center">
     <button type="button" class="btn btn-primary" style="width:60%;" ng-click="checkIn()">Check In</button>
 </div>
 <div align="center">
-    <button type="button" class="btn btn-primary" style="margin-top:8px; width:60%;" ng-click="callGoogleMaps()">Show in Google Maps</button>
-    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call Lyft</button>
+    <button type="button" class="btn btn-primary" style="margin-top:8px; width:60%;" ng-click="callGoogleMaps()">Show in <b>Google Maps</b></button>
+    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call <b>Lyft</b></button>
+
 </div>
 
