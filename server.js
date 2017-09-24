@@ -22,7 +22,7 @@ app.use(methodOverride());
 
 // API
 app.post('/api/v1/starttrip', function(req, res) {
-		api.starttrip(req,res);
+	api.starttrip(req,res);
 });
 
 app.post('/api/v1/loadtrip', function(req, res) {
@@ -51,6 +51,10 @@ app.post('/api/v1/generatepath', function(req, res) {
 
 app.post('/api/v1/gettripinfo', function(req, res) {
 	api.gettripinfo(req,res);
+});
+
+app.post('/api/v1/checkin', function(req, res) {
+	api.checkin(req,res);
 });
 
 app.post('/login',function(req,res,next) {

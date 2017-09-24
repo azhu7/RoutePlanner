@@ -82,7 +82,6 @@ function get_cost_matrix(destinations, callback) {
                             //console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
                             cost_matrix[i][j] = parseFloat(distance.slice(0, distance.length - 3).split(',').join(''));
                             cost_matrix[j][i] = parseFloat(distance.slice(0, distance.length - 3).split(',').join(''));
-                            console.log(cost_matrix[j][i]);
                         } else {
                             cost_matrix[i][j] = 1000;
                             cost_matrix[j][i] = 1000;

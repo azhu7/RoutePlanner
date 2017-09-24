@@ -1,18 +1,8 @@
 app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     $http.post('/api/v1/gettripinfo', {trip_code: $stateParams.trip_code}).then(function(response) {
-
         $scope.locations = response.data.path;
         $scope.visited = response.data.visited;
         $scope.unvisited = response.data.unvisited;
-
-        //$scope.locations.splice($scope.locations.length - 1, 1);  // Remove round trip node
-        //$scope.unvisited.splice($scope.visited.length - 1, 1);  // Remove round trip node
-        $scope.visited.push($scope.unvisited[0]);  // Automatically visit the first location
-        $scope.unvisited.splice(0, 1);  // Visited the first location
-
-        //console.log($scope.visited);
-        //console.log($scope.unvisited);
-        console.log($scope.locations);
 
         // init the map
         NgMap.getMap().then(function(map) {
@@ -131,8 +121,18 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         if (unvisitedIdx !== -1) {
             $scope.unvisited.splice(unvisitedIdx,1);
             $scope.visited.push($scope.locations[$scope.currentLocationIdx]);
+            $http.post(
+                "/api/v1/checkin",
+                {
+                    trip_code: $stateParams.trip_code,
+                    dest: $scope.visited[$scope.visited.length - 1]
+                }).then(function(response) {
+                    console.log(response);
+            });
         }
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+
+
 
         if ($scope.unvisited.length === 0) {
             alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
