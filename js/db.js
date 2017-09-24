@@ -113,7 +113,7 @@ module.exports = {
 
     // Move specified trip current_stop to next destination.
     // Return false if at end of trip. Otherwise, return true.
-    check_in: function(trip_code_, dest_, collection_name=default_trip_collection_name) {
+    check_in: function(trip_code_, dest_, callback, collection_name=default_trip_collection_name) {
         let query = { trip_code: trip_code_ };
         db.collection(collection_name).findOne(query, function(err, trip) {
             if (err) throw err;
@@ -141,6 +141,7 @@ module.exports = {
             db.collection(collection_name).updateOne(query, update_trip, function(err, res) {
                 if (err) throw err;
                 console.log('db: Checked in to ' + dest_);
+                callback(trip_code_);
             });
         });
     },

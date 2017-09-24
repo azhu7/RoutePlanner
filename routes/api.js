@@ -1,16 +1,27 @@
 let route = require('../js/route_compute.js');
 let dest = require('../js/utility.js').dest;
+let db = require('../js/db.js');
 let lyft = require('node-lyft');
 let defaultClient = lyft.ApiClient.instance;
+let CLIENTID = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2c5EWkXbT/NPu346Bg6ym2wEtXDgTGuCbCzCunEJCbTwza7r3QzWAYLlwTLReaEAUo=';
 
 
 // Configure OAuth2 access token for authorization: Client Authentication
 let clientAuth = defaultClient.authentications['Client Authentication'];
-clientAuth.accessToken = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2c5EWkXbT/NPu346Bg6ym2wEtXDgTGuCbCzCunEJCbTwza7r3QzWAYLlwTLReaEAUo=';
+clientAuth.accessToken = CLIENTID;
 let apiInstance = new lyft.PublicApi();
 
 
 /* exports json objects */
+
+exports.loadtrip = function(req, res) {
+    let email = req.body['email'];
+    let trip_code = req.body['trip_code'];
+    console.log(email + " " + trip_code);
+    db.get_trip(trip_code, function(trip) {
+        res.json(trip);
+    });
+}
 
 exports.lyftestimate = function(req, res) {
     let destinations = req.body;
@@ -24,7 +35,7 @@ exports.lyftestimate = function(req, res) {
         start = destinations[i]['geometry']['location'];
         end = destinations[i + 1]['geometry']['location'];
 
-        let opts = { 
+        let opts = {
             'endLat': end.lat, // Latitude of the ending location
             'endLng': end.lng // Longitude of the ending location
         };
@@ -71,23 +82,48 @@ exports.lyftestimate = function(req, res) {
             }
         })
         .catch((e) => {
+            console.log("error getting ride estimates");
             res.sendStatus(400);
         });
 }
 
 exports.lyftride_type = function(req, res) {
     console.log(req.body);
+    dest = req.body.dest;
     apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
         let types = [];
         ride_types = data["ride_types"];
         for (let i = 0; i < ride_types.length; ++i) {
-            types.push(ride_types[i]["ride_type"]);
+            let ride_type = ride_types[i]["ride_type"];
+
+            // universal links currenly allow only lyft and lyft_plus ride_types
+            if (ride_type === "lyft" || ride_type === "lyft_plus") {
+                types.push(ride_type);
+            }
         }
 
-        res.json(types);
+        res.send(types);
     }, (error) => {
-        throw error;
+        console.log("error getting ride types");
+        res.sendStatus(400);
     });
+}
+
+exports.lyftuniversal_link = function(req, res) {
+    let ride_type = req.body["ride_type"];
+    let start_lat = req.body["start_lat"];
+    let start_lng = req.body["start_lng"];
+    let end_lat = req.body["end_lat"];
+    let end_lng = req.body["end_lng"];
+
+    if (ride_type !== "lyft" || ride_type !== "lyft_plus") {
+        console.log("incorrect ride type for lyft link");
+        res.sendStatus(400);
+    }
+
+    let link = "https://lyft.com/ride?id=" + ride_type + "&pickup[latitude]=" + start_lat + "&pickup[longitude]=" + start_lng + "&partner=" + CLIENTID + "&destination[latitude]=" + end_lat + "&destination[longitude]=" + end_lng;
+
+    res.send(link);
 }
 
 exports.generatepath = function(req, res, next) {
@@ -117,4 +153,32 @@ exports.generatepath = function(req, res, next) {
             res.send(destinations);
             break;
     }
+}
+
+exports.starttrip = function(req, res) {
+    console.log(req.body);
+
+    let leader = req.body['user'];
+    let destinations = req.body['path'];
+
+    let trip_code = db.add_trip(leader, destinations);
+    res.json({ trip_code: trip_code });
+}
+
+exports.gettripinfo = function(req, res) {
+    let trip_code = req.body['trip_code'];
+    console.log(trip_code);
+    db.get_trip(trip_code, function(trip) {
+        res.json(trip);
+    });
+}
+
+exports.checkin = function(req, res) {
+    let trip_code = req.body['trip_code'];
+    let dest = req.body['dest'];
+    db.check_in(trip_code, dest, function(trip_code) {
+        db.get_trip(trip_code, function(trip) {
+            res.json(trip);
+        });
+    });
 }

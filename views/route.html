@@ -2,14 +2,18 @@
 <br />
 
 <a ui-sref="map">Back</a>
+<br/>
+<br/>
 
-<ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
-<div class="col-md-3">
-    <button type="button" class="btn btn-primary" ng-click="moveBack()">Back</button>
+<div class="map">
+    <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
 </div>
-<div class="col-md-6">
-    <button type="button" class="btn btn-primary" ng-click="checkIn()">Check In</button>
+
+<div align="center">
+<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="moveBack()">Back</button>
+<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="checkIn()">Check In</button>
+<button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="moveForward()">Forward</button>
 </div>
-<div class="col-md-3">
-    <button type="button" class="btn btn-primary" ng-click="moveForward()">Forward</button>
+<div align="center">
+    <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;" ng-click="callLyft()">Call Lyft</button>
 </div>
