@@ -17,7 +17,6 @@ app.controller('MapCtrl', function($scope, NgMap) {
     $scope.vm = this;
     // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
-    $scope.markers = [];
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 
@@ -26,7 +25,6 @@ app.controller('MapCtrl', function($scope, NgMap) {
             console.log("calculating a route....")
 
             var waypts = [];
-            console.log($scope.locations.length)
             for (i=1; i < $scope.locations.length - 1; i++){
                 waypts.push({
                     location: $scope.locations[i].geometry.location,
@@ -46,6 +44,21 @@ app.controller('MapCtrl', function($scope, NgMap) {
 
             directionsService.route(request, function(result,status) {
                 if(status == 'OK') {
+                    console.log("result: ", result)
+                    directionsDisplay.setDirections(result)
+                }
+            })
+        } else if ($scope.locations.length === 1) {
+
+            var request = {
+                origin: $scope.locations[0].geometry.location,
+                destination: $scope.locations[0].geometry.location,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            }
+
+            directionsService.route(request, function(result,status) {
+                if(status == 'OK') {
+                    console.log("result: ", result)
                     directionsDisplay.setDirections(result)
                 }
             })
@@ -56,16 +69,16 @@ app.controller('MapCtrl', function($scope, NgMap) {
         // remove words in search bar
         $scope.address = "";
         $scope.vm.place = this.getPlace();
-        marker = new google.maps.Marker({
-            position: $scope.vm.place.geometry.location,
-            map: $scope.vm.map,
-            draggable: false,
-            animation: google.maps.Animation.DROP
-        });
+        // marker = new google.maps.Marker({
+        //     position: $scope.vm.place.geometry.location,
+        //     map: $scope.vm.map,
+        //     draggable: false,
+        //     animation: google.maps.Animation.DROP
+        // });
 
-        $scope.vm.map.setZoom(10)
+        $scope.vm.map.setZoom(20)
         $scope.locations.push($scope.vm.place);
-        $scope.markers.push(marker);
+        // $scope.markers.push(marker);
         $scope.vm.map.setZoom(13);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
 
@@ -76,8 +89,8 @@ app.controller('MapCtrl', function($scope, NgMap) {
     // removes the marker off the map
     $scope.removeLocation = function(index) {
         $scope.locations.splice(index, 1);
-        $scope.markers[index].setMap(null);
-        $scope.markers.splice(index, 1);
+        // $scope.markers[index].setMap(null);
+        // $scope.markers.splice(index, 1);
         $scope.drawRoute();
     };
 
