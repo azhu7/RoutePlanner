@@ -11,7 +11,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         templateUrl: 'views/map.html',
     	controller: 'MapCtrl'
     }).state('finalRoute', {
-        url: '/itinerary/{tripId}',
+        url: '/itinerary/{trip_code}',
         templateUrl: 'views/route.html',
         controller: 'RouteCtrl'
     });

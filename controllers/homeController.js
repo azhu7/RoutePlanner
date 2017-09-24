@@ -77,6 +77,7 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
         });
 
         $scope.locations.push($scope.vm.place);
+        console.log("sup", $scope.vm.place.geometry.location)
         $scope.markers.push(marker);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
         $scope.vm.map.setZoom(13);
