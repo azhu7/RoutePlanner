@@ -3,12 +3,13 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 		if ($scope.user.trip_code) {
             console.log("trip code used...");
             $state.go('finalRoute',{trip_code: $scope.user.trip_code});
+            return;
         }
 
 
         $http.post("/login", $scope.user).then(function(response) {
 			$state.go('map', {email: $scope.user.email, phone: $scope.user.phone})
-				console.log("login successful");
+			console.log("login successful");
 		});
 		console.log("user email: " + $scope.user.email);
 	}
