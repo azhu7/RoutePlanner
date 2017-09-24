@@ -19,6 +19,19 @@ function basic_test() {
     let rochester = new dest(42.6806, -83.1338, 'Rochester');
     let novi = new dest(42.4806, -83.4755, 'Novi');
 
+    setTimeout(function() {
+        db.drop_collection(test_user_collection_name);
+        db.drop_collection(test_trip_collection_name);
+    }, 500)
+
+    setTimeout(function() {
+        db.close();
+    }, 1000)
+
+    setTimeout(function() {
+        db.open(test_user_collection_name, test_trip_collection_name);
+    }, 1500)
+
     // Add users, trips, and members.
     setTimeout(function() {
         db.add_user('alex@umich.edu', '111-111-1111', test_user_collection_name);
@@ -75,7 +88,7 @@ function basic_test() {
     // Close MongoClient
     setTimeout(function() {
         db.close();
-    }, 7000);
+    }, 5000);
 }
 
 basic_test();
