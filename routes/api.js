@@ -116,14 +116,14 @@ exports.lyftuniversal_link = function(req, res) {
     let end_lat = req.body["end_lat"];
     let end_lng = req.body["end_lng"];
 
-    if (ride_type !== "lyft" || ride_type !== "lyft_plus") {
+    if (ride_type !== "lyft" && ride_type !== "lyft_plus") {
         console.log("incorrect ride type for lyft link");
         res.sendStatus(400);
     }
 
     let link = "https://lyft.com/ride?id=" + ride_type + "&pickup[latitude]=" + start_lat + "&pickup[longitude]=" + start_lng + "&partner=" + CLIENTID + "&destination[latitude]=" + end_lat + "&destination[longitude]=" + end_lng;
 
-    res.send(link);
+    res.json(link);
 }
 
 exports.generatepath = function(req, res, next) {
@@ -169,6 +169,7 @@ exports.gettripinfo = function(req, res) {
     let trip_code = req.body['trip_code'];
     console.log(trip_code);
     db.get_trip(trip_code, function(trip) {
+        console.log(trip);
         res.json(trip);
     });
 }

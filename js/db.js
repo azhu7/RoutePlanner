@@ -107,6 +107,7 @@ module.exports = {
         let query = { trip_code: trip_code_ };
         db.collection(collection_name).findOne(query, function(err, res) {
             if (err) throw err;
+            console.log(res);
             callback(res);
         });
     },

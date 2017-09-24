@@ -2,11 +2,13 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     $http.post('/api/v1/gettripinfo', {trip_code: $stateParams.trip_code}).then(function(response) {
         // TODO
         // REQUIRES: optimal path
-        console.log(response.data)
         $scope.locations = response.data.path;
         $scope.visited = response.data.visited;
         $scope.unvisited = response.data.unvisited;
 
+        console.log($scope.locations);
+        console.log($scope.visited);
+        console.log($scope.unvisited);
 
         // init the map
         NgMap.getMap().then(function(map) {
@@ -27,6 +29,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
                 if (unvisitedIdx !== -1) {
                     // unvisited
+                    console.log('Set ' + loc + ' to green!');
                     marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
                 }
 
@@ -42,6 +45,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
                 $scope.currentLocationIdx = 0;
             }
 
+            console.log($scope.currentLocationIdx);
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             $scope.drawRoute();
         });
@@ -80,12 +84,11 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
 
     var findByLatLng = function(target, source) {
-        return source.findIndex(x => x.formatted_address === target.formatted_address);
+        return source.findIndex(x => x.address === target.address);
     }
 
 
     $scope.moveForward = function() {
-        // TODO
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
 
         if (unvisitedIdx !== -1) {
@@ -94,7 +97,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
         }
 
-        if($scope.currentLocationIdx < $scope.locations.length) {
+        if($scope.currentLocationIdx < $scope.locations.length - 1) {
             $scope.currentLocationIdx += 1;
         }
 
@@ -103,7 +106,6 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
 
     $scope.moveBack = function() {
-        // TODO
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
 
         if (unvisitedIdx !== -1) {
@@ -131,8 +133,8 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     }
 
     $scope.callLyft = function() {
-        if ($scope.currentLocationIdx === $scope.locations.length) {
-            if (!$scope.unvisited.length) {
+        if ($scope.currentLocationIdx === $scope.locations.length - 1 || !$scope.unvisited.length) {
+            if ($scope.unvisited.length) {
                 alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
             } else {
                 alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
@@ -148,18 +150,23 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         }
 
         $http.post('/api/v1/lyftride_type', params1).then(function(response){
-            var ride_type = response.data;
+            var ride_type_ = response.data[0];
+            console.log($scope.locations);
+            console.log($scope.currentLocationIdx);
             var params2 = {
-                ride_type: ride_type,
-                start_lat: $scope.location[$scope.currentLocationIdx].lat,
-                start_lng: $scope.location[$scope.currentLocationIdx].lng,
-                end_lat: $scope.location[$scope.currentLocationIdx + 1].lat,
-                end_lng: $scope.location[$scope.currentLocationIdx + 1].lat
+                ride_type: ride_type_,
+                start_lat: $scope.locations[$scope.currentLocationIdx].lat,
+                start_lng: $scope.locations[$scope.currentLocationIdx].lng,
+                end_lat: $scope.locations[$scope.currentLocationIdx + 1].lat,
+                end_lng: $scope.locations[$scope.currentLocationIdx + 1].lng
             }
+
             $http.post("/api/v1/lyftuniversal_link", params2).then(function(response){
-                alert("Copy this link to your browser: ", response.data)
+                console.log(response.data);
+                alert("Copy this link to your browser: " + response.data);
             })
         }).catch(function(err) {
+            console.log(err);
             alert("There doesn't seem to be any Lyfts near you at this time!");
         })
 
