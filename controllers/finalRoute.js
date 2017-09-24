@@ -1,5 +1,5 @@
-app.controller('RouteCtrl',function($scope,NgMap,$state,$stateParams) {
-    $http.post('/TODO', $stateParams.trip_code).then(function(response) {
+app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
+    $http.post('/gettripinfo', $stateParams.trip_code).then(function(response) {
         // TODO
         // REQUIRES: optimal path
         $scope.locations = response.data.path;
@@ -124,7 +124,7 @@ app.controller('RouteCtrl',function($scope,NgMap,$state,$stateParams) {
 
     // init variables
     $scope.locations;
-    cnsole.log("CHECK ME OUT! TRIP CODE: ",$stateParams.trip_code);
+    console.log("CHECK ME OUT! TRIP CODE: ",$stateParams.trip_code);
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
 })
