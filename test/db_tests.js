@@ -1,9 +1,10 @@
 /**
 db_tests.js
-Test class assessing basic db functionalities.
+Test class demonstrating basic db functionalities.
 */
 
 let db = require('../js/db.js');
+let dest = require('../js/utility.js').dest;
 
 let test_user_collection_name = 'users_test';
 let test_trip_collection_name = 'trips_test';
@@ -18,19 +19,18 @@ function basic_test() {
         db.add_user('lingene@', '333-333-3333', test_user_collection_name);
         db.add_user('jerry@', '444-444-4444', test_user_collection_name);
 
-        let alex_trip_code = db.add_trip('alex@', [[0, 0, 'd0'], [1, 1, 'd1'], [2, 2, 'd2']], test_user_collection_name, test_trip_collection_name);
-        let albert_trip_code = db.add_trip('albert@', [[3, 3, 'd3'], [4, 4, 'd4'], [5, 5, 'd5']], test_user_collection_name, test_trip_collection_name);
+        let alex_trip_code = db.add_trip('alex@', [new dest(0, 0, 'd0'), new dest(1, 1, 'd1'), new dest(2, 2, 'd2')], test_user_collection_name, test_trip_collection_name);
+        let albert_trip_code = db.add_trip('albert@', [new dest(3, 3, 'd3'), new dest(4, 4, 'd4'), new dest(5, 5, 'd5')], test_user_collection_name, test_trip_collection_name);
 
         db.add_trip_member(alex_trip_code, 'lingene@', test_user_collection_name, test_trip_collection_name);
         db.add_trip_member(alex_trip_code, 'lingene@', test_user_collection_name, test_trip_collection_name);  // Should not insert this
-        db.add_trip_member(alex_trip_code, 'albert@', test_user_collection_name, test_trip_collection_name);
         db.add_trip_member(alex_trip_code, 'jerry@', test_user_collection_name, test_trip_collection_name);
         db.add_trip_member(albert_trip_code, 'alex@', test_user_collection_name, test_trip_collection_name);
         db.add_trip_member(albert_trip_code, 'lingene@', test_user_collection_name, test_trip_collection_name);
 
-        db.check_in(alex_trip_code, test_trip_collection_name);
-        db.check_in(alex_trip_code, test_trip_collection_name);
-        db.check_in(albert_trip_code, test_trip_collection_name);
+        db.check_in(alex_trip_code, new dest(0, 0, 'd0'), test_trip_collection_name);
+        db.check_in(alex_trip_code, new dest(2, 2, 'd2'), test_trip_collection_name);
+        db.check_in(albert_trip_code, new dest(3, 3, 'd3'), test_trip_collection_name);
     }, 2000);
 
     // Print information.

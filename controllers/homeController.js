@@ -1,19 +1,19 @@
 app.controller('HomeCtrl', function($scope,$http,$state) {
-    $scope.submitForm = function() {
-        $http.post("/login", $scope.user).then(function(response) {
-            $state.go('map')
-            console.log("login successful");
-        });
-        console.log("user email: " + $scope.user.email);
-    }
+	$scope.submitForm = function() {
+		$http.post("/login", $scope.user).then(function(response) {
+			$state.go('map')
+				console.log("login successful");
+		});
+		console.log("user email: " + $scope.user.email);
+	}
 
-    $scope.user = {};
+	$scope.user = {};
 });
 
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope, NgMap) {
+app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormModal) {
     $scope.vm = this;
     // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
@@ -77,9 +77,9 @@ app.controller('MapCtrl', function($scope, NgMap) {
         });
 
         $scope.locations.push($scope.vm.place);
-        $scope.markers.push(marker)
+        $scope.markers.push(marker);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
-
+        $scope.vm.map.setZoom(13);
         // $scope.drawRoute();
     };
 
@@ -98,4 +98,45 @@ app.controller('MapCtrl', function($scope, NgMap) {
         // directionsDisplay.setMap(map);
 	    google.maps.event.trigger($scope.vm.map, 'resize');
     });
+
+
+    $scope.openModal = function() {
+		$rootScope.locations = $scope.locations;
+		RouteFormModal.open();
+	};
+});
+
+app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {
+	$scope.cancel = $uibModalInstance.close;
+	$scope.locations = $rootScope.locations;
+
+	// makes backend request to find fastest route and call lyft
+	$scope.findShortestRoute = function() {
+	   var input = [$scope.locations, $scope.option];
+	   $http({
+	       url: "api/v1/generatepath",
+	       method: "POST",
+	       data: input
+	   }).then(function successCallback(response) {
+	       console.log(response.data);
+	   });
+	    $scope.cancel();
+	};
+});
+// defines modal for confirming route and selecting options
+app.factory('RouteFormModal', function($rootScope, $uibModal) {
+	var open = function() {
+		return $uibModal.open({
+			templateUrl: 'route-form-modal.html',
+			controller: 'RouteFormController',
+			size: 'md',
+			resolve: {
+
+			}
+		});
+	};
+
+	return {
+		open: open
+	};
 });
