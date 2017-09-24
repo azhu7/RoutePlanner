@@ -1,13 +1,10 @@
 <div class="header"><strong>Plan Trip</strong></div>
 <br />
 <div class="col-sm-3">
-	<button id="call_lyft_button" class="center-block" type="submit" ng-click="openModal()">
-		Make Path</button>
-	<br />
 	<input id="map_lookup" class="line_input center-block" places-auto-complete ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
 																	on-place-changed="placeChanged()" />
 	<ul id="locations_list" class="center-block">
-		<li class="card" ng-repeat="location in locations track by $index">
+		<li class="card center-block" ng-repeat="location in locations track by $index">
 			<div>
 				<button class="remove_location" ng-click="removeLocation($index)"><i class="fa fa-close"></i></button>
 				{{location.formatted_address}}
@@ -20,6 +17,9 @@
 		<ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
 
 	</div>
+	<button id="call_lyft_button" class="center-block" type="submit" ng-click="openModal()">
+		Make Path</button>
+		
 </div>
 
 <script type="text/ng-template" id="route-form-modal.html">
@@ -27,7 +27,7 @@
         <h4 class="modal-title">Confirm Path</h4>
     </div>
     <div class="modal-body">
-	<h3>Current Route:</h3>
+	<h3>Current :</h3>
 	<ul>
 		<li ng-repeat="location in locations">{{location.formatted_address}}</li>	
 	</ul>
