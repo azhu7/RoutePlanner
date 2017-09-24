@@ -38,7 +38,6 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 	var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	var directionsService = new google.maps.DirectionsService;
 
-
 	$scope.drawRoute = function() {
 		if ($scope.path.length > 1) {
 			console.log("calculating a route....")
@@ -128,22 +127,11 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 			method: "POST",
 			data: locations
 		}).then(function successCallback(response) {
-			$scope.estimate = response.data;
+			$scope.estimate = response.data.estimate;
 		}, function errorCallback(response) {
 			$scope.estimate = null;
 		}).catch(function(err) {
 			$scope.estimate = null;
-		});
-	};
-
-	$scope.startTrip = function() {
-		var body = {'user': "jerry@umich.edu", 'path': $scope.path};
-		$http({
-			url: "api/v1/starttrip",
-			method: "POST",
-			data: body
-		}).then(function successCallback(response) {
-			$scope.trip_code = response.data;
 		});
 	};
 

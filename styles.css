@@ -19,7 +19,7 @@ h4 {
 }
 
 .planner {
-	margin-top: 45px;
+	margin-top: 15px;
 	margin-bottom: 45px;
 }
 
@@ -39,7 +39,7 @@ h4 {
 }
 
 .footer {
-	position: absolute; 
+	position: absolute;
 	bottom: 0;
 	width: 100%;
 	padding: 10px;
@@ -50,6 +50,7 @@ h4 {
 	padding: 10px;
 	border: solid 5px #c9c9c9;
 	transition: border 0.3s;
+	text-align: center;
 }
 
 .line_input[type="text"]:focus {
@@ -109,6 +110,10 @@ ng-map {
 	background-color: #f2f2f2;
 }
 
+#estimate_info {
+	display: inline-block;
+}
+
 #call_lyft_button {
 	/*margin-top: 510px;*/
 	padding-top: 10px;
@@ -154,3 +159,39 @@ ng-map {
 	color: white;
 	background-color:#00ACC1;
 }
+
+.btn:focus {
+	outline: none;
+}
+
+.location {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.arrow, .arrow:hover, .arrow:focus, .arrow:active:focus {
+	background-color: transparent;
+	border: none;
+	color: black;
+	outline: none;
+	box-shadow: none;
+}
+
+.aligner {
+	display: flex;
+	align-items: center;
+  	justify-content: center;
+}
+
+.aligner-item {
+  max-width: 50%;
+  margin: auto;
+}
+
+/*.aligner-item--top {
+  align-self: flex-start;
+}
+
+.aligner-item--bottom {
+  align-self: flex-end;
+}*/

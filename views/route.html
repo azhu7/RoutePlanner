@@ -5,25 +5,29 @@
         <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
     </div>
 
-    <div class="row" align="center">
+    <div class="row location" align="center">
         <div class="col-sm-6 col-sm-offset-3">
-            <button type="button" class="btn btn-primary pull-left" ng-click="moveBack()">
-                Back
+            <button type="button" class="btn btn-primary arrow" ng-click="moveBack()">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </button>
-            <input type="text" class="line_input" style="text-align:center;" value="{{ currentAddress }}"  disabled/>
-            <button type="button" class="btn btn-primary pull-right" ng-click="moveForward()">
-                Forward
+            <input type="text" class="line_input" value="{{ currentAddress }}"  disabled/>
+            <button type="button" class="btn btn-primary arrow" ng-click="moveForward()">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </button>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-primary" style="width:60%;" ng-click="checkIn()">Check In</button>
+        <div class="col-sm-6 col-sm-offset-3 aligner">
+            <div class="col-sm-4" align="center">
+                <button type="button" class="btn btn-primary" ng-click="checkIn()">Check In</button>
             </div>
-            <div class="col-sm-6">
-                <button type="button" class="btn btn-primary" id="call_lyft_button" style="margin-top:8px;width:60%;" ng-click="callLyft()">Call Lyft</button>    
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary" ng-click="callGoogleMaps()">Show in <b>Google Maps</b></button>
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary" id="call_lyft_button" ng-click="callLyft()">Call <b>Lyft</b></button>  
             </div>
         </div>
     </div>
 </div>
+
