@@ -74,9 +74,11 @@ module.exports = {
             trip_code: code,
             members: [leader_],
             leader: leader_,
+            path: destinations_,
             unvisited: destinations_,
             visited: [],
-            travel_times: []
+            travel_times: [],
+            next_dest: destinations_[0]
         };
         
         db.collection(trip_collection_name).insertOne(new_trip, function(err, trip) {
@@ -116,11 +118,18 @@ module.exports = {
         db.collection(collection_name).findOne(query, function(err, trip) {
             if (err) throw err;
 
+            let next_dest = null;
+
             for (let i = 0; i < trip['unvisited'].length; i++) {
                 let cur = trip['unvisited'][i];
                 if (cur['lat'] === dest_['lat'] &&
                     cur['lng'] === dest_['lng'] &&
                     cur['address'] === dest_['address']) {
+                    if (i < trip['unvisited'].length - 1) {
+                        // Cache the next destination
+                        next_dest = trip['unvisited'][i + 1];
+                    }
+
                     trip['unvisited'].splice(i, 1);
                     break;
                 }
@@ -128,7 +137,7 @@ module.exports = {
 
             trip['visited'].push(dest_);
 
-            let update_trip = { $set: { unvisited: trip['unvisited'], visited: trip['visited'] } };
+            let update_trip = { $set: { unvisited: trip['unvisited'], visited: trip['visited'], next_dest: next_dest } };
             db.collection(collection_name).updateOne(query, update_trip, function(err, res) {
                 if (err) throw err;
                 console.log('db: Checked in to ' + dest_);
@@ -185,16 +194,16 @@ TRIPS
     trip_code       string
     members         array<user emails>  // unused
     leader          user_id
-    unvisited       array<dest>     // { lat, lng, address }
-    visited         array<dest>     // { lat, lng, address }, sorted in route order
+    path            array<dest>     // [{ lat, lng, address }..], full path
+    unvisited       array<dest>     // [{ lat, lng, address }..], sorted in route order
+    visited         array<dest>     // [{ lat, lng, address }..], sorted in check-in order
     travel_times    array<number>   // unused, correponds to destinations
-    
+    next_dest       dest
     
 Login:
     Add user to USERS if not exist
 
 Begin trip:
-    Add locations to LOCATIONS if not exist
     Save trip info to TRIPS
     
 Next destination:
