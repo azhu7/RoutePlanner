@@ -13,6 +13,7 @@ let apiInstance = new lyft.PublicApi();
 /* exports json objects */
 
 exports.lyftestimate = function(req, res) {
+    console.log(req.body);
     let destinations = req.body.destinations;
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
@@ -63,8 +64,17 @@ exports.lyftestimate = function(req, res) {
 }
 
 exports.lyftride_type = function(req, res) {
-    console.log('hello');
-	res.json({hello: "world"});
+    console.log(req.body);
+    // apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
+    //     let types = [];
+    //     ride_types = data["ride_types"];
+    //     for (let i = 0; i < ride_types.length; ++i) {
+    //         types.push(ride_types[i]["ride_type"]);
+    //     }
+    //     return types;
+    // }, (error) => {
+    //     throw error;
+    // });
 }
 
 exports.generatepath = function(req, res, next) {
