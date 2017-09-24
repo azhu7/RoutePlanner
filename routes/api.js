@@ -35,7 +35,7 @@ exports.lyftestimate = function(req, res) {
         start = destinations[i]['geometry']['location'];
         end = destinations[i + 1]['geometry']['location'];
 
-        let opts = { 
+        let opts = {
             'endLat': end.lat, // Latitude of the ending location
             'endLng': end.lng // Longitude of the ending location
         };
@@ -89,6 +89,7 @@ exports.lyftestimate = function(req, res) {
 
 exports.lyftride_type = function(req, res) {
     console.log(req.body);
+    dest = req.body.dest;
     apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
         let types = [];
         ride_types = data["ride_types"];

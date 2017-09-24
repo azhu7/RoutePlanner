@@ -42,6 +42,11 @@ ng-map {
 	width: 97%;
 }
 
+.mapDiv {
+    height: 600px;
+    width: 97%;
+}
+
 #map {
 	height: 600px;
 }

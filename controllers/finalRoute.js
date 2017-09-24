@@ -130,7 +130,40 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
     }
 
+    $scope.callLyft = function() {
+        if ($scope.currentLocationIdx === $scope.locations.length) {
+            if (!$scope.unvisited.length) {
+                alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
+            } else {
+                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
+            }
+            return;
+        }
 
+        var params1 = {
+            dest : {
+                lat: $scope.locations[$scope.currentLocationIdx].lat,
+                lng: $scope.locations[$scope.currentLocationIdx].lng
+            }
+        }
+
+        $http.post('/api/v1/lyftride_type', params1).then(function(response){
+            var ride_type = response.data;
+            var params2 = {
+                ride_type: ride_type,
+                start_lat: $scope.location[$scope.currentLocationIdx].lat,
+                start_lng: $scope.location[$scope.currentLocationIdx].lng,
+                end_lat: $scope.location[$scope.currentLocationIdx + 1].lat,
+                end_lng: $scope.location[$scope.currentLocationIdx + 1].lat
+            }
+            $http.post("/api/v1/lyftuniversal_link", params2).then(function(response){
+                alert("Copy this link to your browser: ", response.data)
+            })
+        }).catch(function(err) {
+            alert("There doesn't seem to be any Lyfts near you at this time!");
+        })
+
+    }
 
 
 

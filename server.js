@@ -29,11 +29,11 @@ app.post('/api/v1/lyftestimate', function(req,res) {
 	api.lyftestimate(req,res);
 });
 
-app.get('/api/v1/lyftride_type', function(req, res) {
+app.post('/api/v1/lyftride_type', function(req, res) {
 	api.lyftride_type(req,res);
 });
 
-app.get('/api/v1/lyftuniversal_link', function(req, res) {
+app.post('/api/v1/lyftuniversal_link', function(req, res) {
     api.lyftuniversal_link(req,res);
 })
 
