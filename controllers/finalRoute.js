@@ -44,7 +44,8 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             } else {
                 $scope.currentLocationIdx = 0;
             }
-
+            console.log("hi: ",$scope.currentAddress)
+            $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
             console.log($scope.currentLocationIdx);
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             $scope.drawRoute();
@@ -101,6 +102,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.currentLocationIdx += 1;
         }
 
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
 
@@ -117,7 +119,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         if ($scope.currentLocationIdx > 0) {
             $scope.currentLocationIdx -= 1;
         }
-
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
 
