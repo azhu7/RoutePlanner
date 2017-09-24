@@ -142,6 +142,11 @@ exports.generatepath = function(req, res, next) {
         destinations.push(new dest(location['lat'], location['lng'], req.body[0][i]['formatted_address']));
     }
 
+    console.log(destinations);
+    if (destinations.length === 0) {
+        res.sendStatus(400);
+    }
+
     switch (req.body[1]) {
         case 'optimal':
             route.optimal_route(destinations, true, function(ordering) {

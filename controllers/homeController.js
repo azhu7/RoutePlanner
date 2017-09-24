@@ -115,7 +115,9 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 			$scope.path_made = true;
 			$scope.estimateLyftRide();
 		}, function errorCallback(response) {
-			console.log("failed to generate path");
+			alert("Unable to generate path");
+		}).catch(function(err) {
+			alert("Unable to generate path");
 		});
 	};
 
@@ -128,6 +130,10 @@ app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $locatio
 		}).then(function successCallback(response) {
 			$scope.estimate = response.data;
 			console.log($scope.estimate);
+		}, function errorCallback(response) {
+			$scope.estimate = null;
+		}).catch(function(err) {
+			$scope.estimate = null;
 		});
 	};
 
