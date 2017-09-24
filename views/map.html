@@ -27,12 +27,14 @@
     <div class="col-sm-9">
         <div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
             <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
-
         </div>
         <button id="call_lyft_button" class="center-block" type="submit" ng-click="findShortestRoute()">
-            Generate Path</button>
-            
-    </div>
+            Generate Path
+        </button>
+        <button id="start_trip_button" class="center-block" type="submit" ng-click="startTrip()" ng-if="path_made">
+            Start Trip
+        </button>
+	</div>
 </div>
 
 <script type="text/ng-template" id="route-form-modal.html">

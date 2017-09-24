@@ -9,7 +9,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
     }).state('map', {
         url: '/map',
         templateUrl: 'views/map.html',
-    	controller: 'MapCtrl'
+    	params: {
+            email: null,
+            phone: null
+        },
+        controller: 'MapCtrl'
     }).state('finalRoute', {
         url: '/itinerary/{trip_code}',
         templateUrl: 'views/route.html',

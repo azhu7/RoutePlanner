@@ -1,7 +1,7 @@
 app.controller('HomeCtrl', function($scope,$http,$state) {
 	$scope.submitForm = function() {
 		$http.post("/login", $scope.user).then(function(response) {
-			$state.go('map')
+			$state.go('map', {email: $scope.user.email, phone: $scope.user.phone})
 				console.log("login successful");
 		});
 		console.log("user email: " + $scope.user.email);
@@ -13,13 +13,19 @@ app.controller('HomeCtrl', function($scope,$http,$state) {
 // helper to initialize the Google Maps Api through
 // MapCtrl
 
-app.controller('MapCtrl', function($scope, $http, NgMap) {
+app.controller('MapCtrl', function($scope, $http, $stateParams, $state, $location, NgMap) {
 	$scope.vm = this;
 	// sets of locations and markers to render sidebar and map respectively
-	$scope.locations = [];
+
+    $scope.user = {};
+    $scope.user.email = $stateParams.email;
+    $scope.user.phone = $stateParams.phone;
+    console.log("user info: ", $scope.user);
+    $scope.locations = [];
 	$scope.markers = [];
 	$scope.path = [];
 	$scope.estimate;
+	$scope.path_made = false;
 
 	NgMap.getMap().then(function(map) {
 		// directionsDisplay = new google.maps.DirectionsRenderer();
@@ -106,9 +112,12 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 		}).then(function successCallback(response) {
 			$scope.path = response.data;
 			$scope.drawRoute();
+			$scope.path_made = true;
 			$scope.estimateLyftRide();
 		}, function errorCallback(response) {
-			console.log("failed to generate path"); 
+			alert("Unable to generate path");
+		}).catch(function(err) {
+			alert("Unable to generate path");
 		});
 	};
 
@@ -121,8 +130,39 @@ app.controller('MapCtrl', function($scope, $http, NgMap) {
 		}).then(function successCallback(response) {
 			$scope.estimate = response.data;
 			console.log($scope.estimate);
+		}, function errorCallback(response) {
+			$scope.estimate = null;
+		}).catch(function(err) {
+			$scope.estimate = null;
 		});
 	};
+
+	$scope.startTrip = function() {
+		var body = {'user': "jerry@umich.edu", 'path': $scope.path};
+		$http({
+			url: "api/v1/starttrip",
+			method: "POST",
+			data: body
+		}).then(function successCallback(response) {
+			$scope.trip_code = response.data;
+		});
+	};
+
+	$scope.startTrip = function() {
+		var body = {'user': $scope.user, 'path': $scope.path};
+		$http({
+			url: "api/v1/starttrip",
+			method: "POST",
+			data: body
+		}).then(function successCallback(response) {
+			$scope.trip_code = response.data;
+            for (i=0; i < $scope.markers.length; i++) {
+		        $scope.markers[i].setMap(null);
+            }
+			$state.go('finalRoute', { trip_code:$scope.trip_code});
+		});
+	};
+
 });
 
 /* app.controller('RouteFormController', function($rootScope, $scope, $http, $uibModalInstance) {

@@ -1,14 +1,12 @@
 app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     $http.post('/api/v1/gettripinfo', {trip_code: $stateParams.trip_code}).then(function(response) {
-        // TODO
-        // REQUIRES: optimal path
+
         $scope.locations = response.data.path;
         $scope.visited = response.data.visited;
         $scope.unvisited = response.data.unvisited;
 
-        console.log($scope.locations);
-        console.log($scope.visited);
-        console.log($scope.unvisited);
+        $scope.visited.push($scope.unvisited[0]);  // Automatically visit the first location
+        $scope.unvisited.splice(0, 1);  // Visited the first location
 
         // init the map
         NgMap.getMap().then(function(map) {
@@ -36,6 +34,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
 
                 $scope.markers.push(marker);
             });
+
             if ($scope.visited.length) {
                 $scope.currentLocationIdx = findByLatLng($scope.visited[$scope.visited.length - 1], $scope.locations);
                 if ($scope.currentLocationIdx === -1) {
@@ -45,7 +44,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
                 $scope.currentLocationIdx = 0;
             }
 
-            console.log($scope.currentLocationIdx);
+            $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
             $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png')
             $scope.drawRoute();
         });
@@ -82,11 +81,9 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         }
     }
 
-
     var findByLatLng = function(target, source) {
         return source.findIndex(x => x.address === target.address);
     }
-
 
     $scope.moveForward = function() {
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
@@ -101,9 +98,9 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.currentLocationIdx += 1;
         }
 
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
-
 
     $scope.moveBack = function() {
         var unvisitedIdx = findByLatLng($scope.locations[$scope.currentLocationIdx], $scope.unvisited);
@@ -117,7 +114,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         if ($scope.currentLocationIdx > 0) {
             $scope.currentLocationIdx -= 1;
         }
-
+        $scope.currentAddress = $scope.locations[$scope.currentLocationIdx].address;
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
     }
 
@@ -130,6 +127,10 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             $scope.visited.push($scope.locations[$scope.currentLocationIdx]);
         }
         $scope.markers[$scope.currentLocationIdx].setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+
+        if ($scope.unvisited.length === 0) {
+            alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
+        }
     }
 
     $scope.callLyft = function() {
@@ -137,7 +138,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             if ($scope.unvisited.length) {
                 alert("It seems that you skipped a few destinations along your trip! To recalculate a new itinerary, please hit the back button")
             } else {
-                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggestion!");
+                alert("It seems that you've reached the end of your trip. We hope you enjoyed using our app and our suggested route!");
             }
             return;
         }
@@ -185,8 +186,6 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             end_address: $scope.locations[$scope.currentLocationIdx + 1].address,
         }
 
-        console.log(params2);
-
         $http.post("/api/v1/googleuniversal_link", params2).then(function(response){
             console.log(response.data);
             var win = window.open(response.data, '_blank');
@@ -195,6 +194,13 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
             console.log(err);
             alert("Something went wrong while opening Google Maps.");
         });
+    }
+
+    $scope.edit = function() {
+        for (i = 0; i < $scope.markers.length; i++){
+            $scope.markers[i].setMap(null);
+        }
+        $state.go('map');
     }
 
     // init variables
