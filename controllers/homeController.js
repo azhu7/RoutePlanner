@@ -122,7 +122,7 @@ app.controller('RouteFormController', function($rootScope, $scope, $http, $uibMo
 	       method: "POST",
 	       data: input
 	   }).then(function successCallback(response) {
-	       console.log("Success!");
+	       console.log(response.data);
 	   }); 
 	    $scope.cancel();
 	}; 

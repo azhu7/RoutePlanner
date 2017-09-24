@@ -12,7 +12,7 @@ distance.units('imperial');
 module.exports = {
     optimal_route: function(destinations, round_trip, callback) {
         get_cost_matrix(destinations, function(cost_matrix) {
-            tsp(destinations, cost_matrix, round_trip, callback);
+            tsp(cost_matrix, round_trip, callback);
         });
     },
 
@@ -25,11 +25,11 @@ module.exports = {
                 }
             }
 
-            tsp(destinations, cost_matrix, round_trip, callback);
+            tsp(cost_matrix, round_trip, callback);
         });
     },
 
-    random_route: function(destinations, callback) {
+    random_route: function(destinations, round_trip, callback) {
         let counter = destinations.length;
 
         while (counter > 0) {
@@ -40,16 +40,20 @@ module.exports = {
             destinations[index] = temp;
         }
 
+        if (round_trip) {
+            destinations.push(destinations[0]);
+        }
+        
         callback(destinations);
     }
 }
 
 // Given destinations and a cost matrix, compute the optimal path.
-function tsp(destinations, cost_matrix, round_trip, callback) {
+function tsp(cost_matrix, round_trip, callback) {
     solver
         .solveTsp(cost_matrix, round_trip, {})
         .then(function(result) {
-            callback(result.map(function(idx) { return destinations[idx]; }));
+            callback(result);
         });
 }
 
