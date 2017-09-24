@@ -148,7 +148,7 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         }
 
         $http.post('/api/v1/lyftride_type', params1).then(function(response){
-            var ride_type = response.data;
+            var ride_type = response.data[0];
             var params2 = {
                 ride_type: ride_type,
                 start_lat: $scope.location[$scope.currentLocationIdx].lat,
