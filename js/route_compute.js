@@ -5,6 +5,7 @@ Set of functions for computing various routes, given an array of destinations ([
 
 let solver = require('node-tspsolver');
 let estimator = require('./lyft.js');
+let dest = require('./utility.js').dest;
 let distance = require('google-distance-matrix');
 distance.key('AIzaSyDXlg2yAdgUtISR7VqeNUkH6LjehNaszaQ');
 distance.units('imperial');
@@ -17,8 +18,8 @@ function get_cost_matrix(destinations, callback) {
         cost_matrix[i] = new Array(destinations.length);
     }
 
-    var start = destinations.map(function(item) { return [item[0] + ',' + item[1]]; });
-    var end = destinations.map(function(item) { return [item[0] + ',' + item[1]]; });
+    var start = destinations.map(function(item) { return item.lat + ',' + item.lng; });
+    var end = destinations.map(function(item) { return item.lat + ',' + item.lng; });
 
     distance.matrix(start, end, function(err, distances) {
         if (err) throw err;
@@ -95,12 +96,12 @@ function random_route(destinations, callback) {
     callback(destinations);
 }
 
-optimal_route([[37, -121, "d1"], [37.1, -122, "d2"], [37.0250, -122, "d3"], [37.2, -122, "d4"]], false, function(result) {
+optimal_route([new dest(37, -121, "d1"), new dest(37.1, -122, "d2"), new dest(37.0250, -122, "d3"), new dest(37.2, -122, "d4")], false, function(result) {
     console.log("OPTIMAL:");
     console.log(result);
 });
 
-worst_route([[37, -121, "d1"], [37.1, -122, "d2"], [37.0250, -122, "d3"], [37.2, -122, "d4"]], false, function(result) {
+worst_route([new dest(37, -121, "d1"), new dest(37.1, -122, "d2"), new dest(37.0250, -122, "d3"), new dest(37.2, -122, "d4")], false, function(result) {
     console.log("WORST:");
     console.log(result);
 });
