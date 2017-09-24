@@ -30,7 +30,7 @@ function basic_test() {
 
         db.check_in(alex_trip_code, new dest(0, 0, 'd0'), test_trip_collection_name);
         db.check_in(alex_trip_code, new dest(2, 2, 'd2'), test_trip_collection_name);
-        db.check_in(albert_trip_code, new dest(3, 3, 'd3'), test_trip_collection_name);
+        db.check_in(albert_trip_code, new dest(5, 5, 'd5'), test_trip_collection_name);
     }, 2000);
 
     // Print information.
