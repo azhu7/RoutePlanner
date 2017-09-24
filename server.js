@@ -37,6 +37,10 @@ app.post('/api/v1/generatepath', function(req, res) {
 	api.generatepath(req,res);
 });
 
+app.get('/api/v1/lyftuniversal_link', function(req, res) {
+    api.lyftuniversal_link(req,res);
+})
+
 app.post('/api/v1/gettripinfo', function(req, res) {
 	api.gettripinfo(req,res);
 });

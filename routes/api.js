@@ -3,11 +3,12 @@ let dest = require('../js/utility.js').dest;
 let db = require('../js/db.js');
 let lyft = require('node-lyft');
 let defaultClient = lyft.ApiClient.instance;
+let CLIENTID = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2c5EWkXbT/NPu346Bg6ym2wEtXDgTGuCbCzCunEJCbTwza7r3QzWAYLlwTLReaEAUo=';
 
 
 // Configure OAuth2 access token for authorization: Client Authentication
 let clientAuth = defaultClient.authentications['Client Authentication'];
-clientAuth.accessToken = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2c5EWkXbT/NPu346Bg6ym2wEtXDgTGuCbCzCunEJCbTwza7r3QzWAYLlwTLReaEAUo=';
+clientAuth.accessToken = CLIENTID;
 let apiInstance = new lyft.PublicApi();
 
 
@@ -98,6 +99,16 @@ exports.lyftride_type = function(req, res) {
     }, (error) => {
         throw error;
     });
+}
+
+exports.lyftuniversal_link = function(req, res) {
+    let start_lat = req.body["start_lat"];
+    let start_lng = req.body["start_lng"];
+    let end_lat = req.body["end_lat"];
+    let end_lng = req.body["end_lng"];
+    let link = "https://lyft.com/ride?id=lyft&pickup[latitude]=" + start_lat + "&pickup[longitude]=" + start_lng + "&partner=" + CLIENTID + "&destination[latitude]=" + end_lat + "&destination[longitude]=" + end_lng;
+
+    res.send(link);
 }
 
 exports.generatepath = function(req, res, next) {
