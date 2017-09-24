@@ -17,6 +17,7 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
     $scope.vm = this;
     // sets of locations and markers to render sidebar and map respectively
     $scope.locations = [];
+	$scope.markers = [];
     // var directionsDisplay;
     // var directionsService = new google.maps.DirectionsService();
 
@@ -79,7 +80,7 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
         $scope.locations.push($scope.vm.place);
         $scope.markers.push(marker);
         $scope.vm.map.setCenter($scope.vm.place.geometry.location);
-        $scope.vm.map.setZoom(13);
+        $scope.vm.map.setZoom(11);
         // $scope.drawRoute();
     };
 
