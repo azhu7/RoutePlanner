@@ -104,7 +104,7 @@ app.controller('MapCtrl', function($scope, $rootScope, $http, NgMap, RouteFormMo
 		google.maps.event.trigger($scope.vm.map, 'resize');
 	});
 
-    $scope.openModal = function() {
+    	$scope.openModal = function() {
 		$rootScope.locations = $scope.locations;
 		RouteFormModal.open(); 
 	};
@@ -124,8 +124,23 @@ app.controller('RouteFormController', function($rootScope, $scope, $http, $uibMo
 	   }).then(function successCallback(response) {
 	       console.log("Success!");
 	   }); 
-	    $scope.cancel();
+	   $scope.cancel();
+
+	   $scope.estimateLyftRide();
 	}; 
+
+	$scope.estimateLyftRide = function() {
+	   var locations = $scope.locations;
+	   console.log($scope.locations);
+	   $http({
+	       url: "api/v1/lyftestimate",
+	       method: "POST",
+	       data: locations
+	   }).then(function successCallback(response) {
+	       console.log("Success in estimating Lyft!");
+	   }); 
+	   $scope.cancel();
+	};
 });
 // defines modal for confirming route and selecting options
 app.factory('RouteFormModal', function($rootScope, $uibModal) {

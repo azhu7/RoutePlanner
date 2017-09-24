@@ -10,7 +10,8 @@ let apiInstance = new lyft.PublicApi();
 /* exports json objects */
 
 exports.lyftestimate = function(req, res) {
-    let destinations = req.body.destinations;
+    let destinations = req.body;
+    console.log(destinations);
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
     let est_time_hours = 0;
