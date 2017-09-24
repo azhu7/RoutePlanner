@@ -9,5 +9,9 @@ module.exports = {
 	    this.lat = lat;			 // decimal
 	    this.lng = lng;			 // decimal
 	    this.address = address;  // string
+
+	    module.exports.dest.prototype.toString = function destToString() {
+	    	return '[' + this.lat + ', ' + this.lng + ', ' + this.address + ']';
+	    }
 	}
 }

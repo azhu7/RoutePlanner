@@ -12,8 +12,8 @@ let default_user_collection_name = 'users';
 let default_trip_collection_name = 'trips';
 
 module.exports = {
+    // Connect to MongoDB, initializing and creating unique indexes for the specified user and trip collections.
     open: function(user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
-        // Connect to MongoDB.
         MongoClient.connect(url, function(err, db_) {
             if (err) throw err;
             db = db_;
@@ -70,13 +70,13 @@ module.exports = {
     // Add trip to trips collection.
     add_trip: function(leader_, destinations_, user_collection_name=default_user_collection_name, trip_collection_name=default_trip_collection_name) {
         let code = generate_trip_code();
-        let new_trip = { 
+        let new_trip = {
             trip_code: code,
             members: [leader_],
             leader: leader_,
-            destinations: destinations_,
-            travel_times: [],               // Will be populated when we determine route
-            current_stop: 0
+            unvisited: destinations_,
+            visited: [],
+            travel_times: []
         };
         
         db.collection(trip_collection_name).insertOne(new_trip, function(err, trip) {
@@ -111,26 +111,39 @@ module.exports = {
 
     // Move specified trip current_stop to next destination.
     // Return false if at end of trip. Otherwise, return true.
-    check_in: function(trip_code_, collection_name=default_trip_collection_name) {
+    check_in: function(trip_code_, dest_, collection_name=default_trip_collection_name) {
         let query = { trip_code: trip_code_ };
-        let update_trip = { $inc: { current_stop: 1 } };
-        db.collection(collection_name).updateOne(query, update_trip, function(err, res) {
-            if (err) throw err;
-        });
-
         db.collection(collection_name).findOne(query, function(err, trip) {
             if (err) throw err;
-            console.log('db: Checked in to trip ' + trip_code_);
-            return (trip['current_stop'] >= trip['destinations'].length)
-        })
-    },
 
+            for (let i = 0; i < trip['unvisited'].length; i++) {
+                let cur = trip['unvisited'][i];
+                if (cur['lat'] === dest_['lat'] &&
+                    cur['lng'] === dest_['lng'] &&
+                    cur['address'] === dest_['address']) {
+                    trip['unvisited'].splice(i, 1);
+                    break;
+                }
+            }
+
+            trip['visited'].push(dest_);
+
+            let update_trip = { $set: { unvisited: trip['unvisited'], visited: trip['visited'] } };
+            db.collection(collection_name).updateOne(query, update_trip, function(err, res) {
+                if (err) throw err;
+                console.log('db: Checked in to ' + dest_);
+            });
+        });
+    },
+ 
     // Print contents of specified collection.
     print_collection: function(name) {
         db.collection(name).find({}).toArray(function(err, result) {
             if (err) throw err;
             console.log('db: Printing collection ' + name);
-            console.log(result);
+            for (let i = 0; i < result.length; i++) {
+                console.log(result[i]);
+            }
         });
     },
 
@@ -169,12 +182,12 @@ USERS
 
 TRIPS
     trip_id         number (P_KEY)
-    trip_code       string?
+    trip_code       string
     members         array<user_id>
     leader          user_id
-    destinations    array<array<number>>  // { latitude, longitude, address }
-    travel_times    array<number>         // correponds to destinations
-    current_stop    number
+    unvisited       array<dest>     // { lat, lng, address }
+    visited         array<dest>     // { lat, lng, address }
+    travel_times    array<number>   // correponds to destinations
     
     
 Login:
