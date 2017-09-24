@@ -21,6 +21,10 @@ app.use(bodyParser.json());                                     // parse applica
 app.use(methodOverride());
 
 // API
+app.post('/api/v1/loadtrip', function(req, res) {
+	api.loadtrip(req,res);
+})
+
 app.post('/api/v1/lyftestimate', function(req,res) {
 	api.lyftestimate(req,res);
 });
@@ -29,13 +33,13 @@ app.get('/api/v1/lyftride_type', function(req, res) {
 	api.lyftride_type(req,res);
 });
 
-app.post('/api/v1/generatepath', function(req, res) {
-	api.generatepath(req,res);
-});
-
 app.get('/api/v1/lyftuniversal_link', function(req, res) {
     api.lyftuniversal_link(req,res);
 })
+
+app.post('/api/v1/generatepath', function(req, res) {
+	api.generatepath(req,res);
+});
 
 app.post('/api/v1/gettripinfo', function(req, res) {
 	api.gettripinfo(req,res);

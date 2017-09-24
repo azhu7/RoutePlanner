@@ -14,6 +14,15 @@ let apiInstance = new lyft.PublicApi();
 
 /* exports json objects */
 
+exports.loadtrip = function(req, res) {
+    let email = req.body['email'];
+    let trip_code = req.body['trip_code'];
+    console.log(email + " " + trip_code);
+    db.get_trip(trip_code, function(trip) {
+        res.json(trip);
+    });
+}
+
 exports.lyftestimate = function(req, res) {
     let destinations = req.body;
     let est_cost_cents_min = 0;
@@ -160,5 +169,15 @@ exports.gettripinfo = function(req, res) {
     console.log(trip_code);
     db.get_trip(trip_code, function(trip) {
         res.json(trip);
+    });
+}
+
+exports.checkin = function(req, res) {
+    let trip_code = req.body['trip_code'];
+    let dest = req.body['dest'];
+    db.check_in(trip_code, dest, function(trip_code) {
+        db.get_trip(trip_code, function(trip) {
+            res.json(trip);
+        });
     });
 }
