@@ -4,7 +4,7 @@
     </div>
     <div class="panel-body">
         <div class="form-group">
-            <label for="email">Email <i class="required">*</i></label>
+            <label for="email">Email <i ng-if="!user.trip_code" class="required">*</i></label>
             <input name="email" class="form-control" id="email" type="email" placeholder="JohnDoe@gmail.com" ng-model="user.email" ng-required="!user.trip_code" />
         </div>
         <div class="form-group">
