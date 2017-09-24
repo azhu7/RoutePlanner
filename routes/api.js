@@ -126,7 +126,7 @@ exports.lyftuniversal_link = function(req, res) {
     res.json(link);
 }
 
-exports.googleuniveresal_link = function(req, res) {
+exports.googleuniversal_link = function(req, res) {
     let start_addr = req.body['start_address'].split(' ').join('+');
     let end_addr = req.body['end_address'].split(' ').join('+');
 
