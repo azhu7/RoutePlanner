@@ -183,11 +183,11 @@ USERS
 TRIPS
     trip_id         number (P_KEY)
     trip_code       string
-    members         array<user_id>
+    members         array<user emails>  // unused
     leader          user_id
     unvisited       array<dest>     // { lat, lng, address }
-    visited         array<dest>     // { lat, lng, address }
-    travel_times    array<number>   // correponds to destinations
+    visited         array<dest>     // { lat, lng, address }, sorted in route order
+    travel_times    array<number>   // unused, correponds to destinations
     
     
 Login:

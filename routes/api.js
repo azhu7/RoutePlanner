@@ -1,5 +1,8 @@
+let route = require('../js/route_compute.js');
+let dest = require('../js/utility.js').dest;
 let lyft = require('node-lyft');
 let defaultClient = lyft.ApiClient.instance;
+
 
 // Configure OAuth2 access token for authorization: Client Authentication
 let clientAuth = defaultClient.authentications['Client Authentication'];
@@ -66,6 +69,30 @@ exports.lyftride_type = function(req, res) {
 }
 
 exports.generatepath = function(req, res, next) {
-    console.log('hello');
-	res.json({hello: "world"});
+    let destinations = [];
+    for (let i = 0; i < req.body[0].length; ++i) {
+        let location = req.body[0][i]['geometry']['location'];
+        destinations.push(new dest(location['lat'], location['lng'], req.body[0][i]['formatted_address']));
+    }
+
+    switch (req.body[1]) {
+        case 'optimal':
+            route.optimal_route(destinations, true, function(ordering) {
+                res.send(ordering.map(function(idx) { return destinations[idx]; }));
+            });
+            break;
+        case 'random':
+            route.random_route(destinations, true, function(ordering) {
+                res.send(ordering);
+            });
+            break;
+        case 'worst':
+            route.worst_route(destinations, true, function(ordering) {
+                res.send(ordering.map(function(idx) { return destinations[idx]; }));
+            });
+            break;
+        case 'priority':
+            res.send(destinations);
+            break;
+    }
 }
