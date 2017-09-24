@@ -82,6 +82,7 @@ exports.lyftestimate = function(req, res) {
             }
         })
         .catch((e) => {
+            console.log("error getting ride estimates");
             res.sendStatus(400);
         });
 }
@@ -92,21 +93,34 @@ exports.lyftride_type = function(req, res) {
         let types = [];
         ride_types = data["ride_types"];
         for (let i = 0; i < ride_types.length; ++i) {
-            types.push(ride_types[i]["ride_type"]);
+            let ride_type = ride_types[i]["ride_type"];
+
+            // universal links currenly allow only lyft and lyft_plus ride_types
+            if (ride_type === "lyft" || ride_type === "lyft_plus") {
+                types.push(ride_type);
+            }
         }
 
-        res.json(types);
+        res.send(types);
     }, (error) => {
-        throw error;
+        console.log("error getting ride types");
+        res.sendStatus(400);
     });
 }
 
 exports.lyftuniversal_link = function(req, res) {
+    let ride_type = req.body["ride_type"];
     let start_lat = req.body["start_lat"];
     let start_lng = req.body["start_lng"];
     let end_lat = req.body["end_lat"];
     let end_lng = req.body["end_lng"];
-    let link = "https://lyft.com/ride?id=lyft&pickup[latitude]=" + start_lat + "&pickup[longitude]=" + start_lng + "&partner=" + CLIENTID + "&destination[latitude]=" + end_lat + "&destination[longitude]=" + end_lng;
+
+    if (ride_type !== "lyft" || ride_type !== "lyft_plus") {
+        console.log("incorrect ride type for lyft link");
+        res.sendStatus(400);
+    }
+
+    let link = "https://lyft.com/ride?id=" + ride_type + "&pickup[latitude]=" + start_lat + "&pickup[longitude]=" + start_lng + "&partner=" + CLIENTID + "&destination[latitude]=" + end_lat + "&destination[longitude]=" + end_lng;
 
     res.send(link);
 }
