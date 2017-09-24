@@ -75,11 +75,11 @@ ng-map {
 }
 
 #call_lyft_button {
+	margin-top: 510px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	border-radius: 20px 20px 20px 20px;
-	z-index: 999;
-	width: 100%;
+	width: 200px;
 	background-color: #AA00FF;
 	color: white;
 	border: none;

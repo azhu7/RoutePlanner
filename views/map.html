@@ -1,7 +1,6 @@
 <div class="header"><strong>Plan Trip</strong></div>
 <br />
 <div class="col-sm-3">
-	<br />
 	<input id="map_lookup" class="line_input center-block" places-auto-complete ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
 																	on-place-changed="placeChanged()" />
 	<ul id="locations_list" class="center-block">
@@ -20,6 +19,7 @@
 	</div>
 	<button id="call_lyft_button" class="center-block" type="submit" ng-click="openModal()">
 		Make Path</button>
+		
 </div>
 
 <script type="text/ng-template" id="route-form-modal.html">

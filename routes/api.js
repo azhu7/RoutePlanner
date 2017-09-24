@@ -25,9 +25,6 @@ exports.lyftestimate = function(req, res) {
         start = destinations[i]['geometry']['location'];
         end = destinations[i + 1]['geometry']['location'];
 
-        console.log('start: ' + start);
-        console.log('end: ' + end);
-
         let opts = { 
             'endLat': end.lat, // Latitude of the ending location
             'endLng': end.lng // Longitude of the ending location
@@ -68,16 +65,17 @@ exports.lyftestimate = function(req, res) {
 
 exports.lyftride_type = function(req, res) {
     console.log(req.body);
-    // apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
-    //     let types = [];
-    //     ride_types = data["ride_types"];
-    //     for (let i = 0; i < ride_types.length; ++i) {
-    //         types.push(ride_types[i]["ride_type"]);
-    //     }
-    //     return types;
-    // }, (error) => {
-    //     throw error;
-    // });
+    apiInstance.getRideTypes(dest.lat, dest.lng).then((data) => {
+        let types = [];
+        ride_types = data["ride_types"];
+        for (let i = 0; i < ride_types.length; ++i) {
+            types.push(ride_types[i]["ride_type"]);
+        }
+        
+        res.json(types);
+    }, (error) => {
+        throw error;
+    });
 }
 
 exports.generatepath = function(req, res, next) {
