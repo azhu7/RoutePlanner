@@ -10,6 +10,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
         url: '/map',
         templateUrl: 'views/map.html',
     	controller: 'MapCtrl'
+    }).state('finalRoute', {
+        url: '/itinerary/{tripId}',
+        templateUrl: 'views/route.html',
+        controller: 'RouteCtrl'
     });
 
     $urlRouterProvider.otherwise('/');

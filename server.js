@@ -21,7 +21,7 @@ app.use(bodyParser.json());                                     // parse applica
 app.use(methodOverride());
 
 // API
-app.get('/api/v1/lyftestimate', function(req,res) {
+app.post('/api/v1/lyftestimate', function(req,res) {
 	api.lyftestimate(req,res);
 });
 

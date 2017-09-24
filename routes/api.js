@@ -13,8 +13,8 @@ let apiInstance = new lyft.PublicApi();
 /* exports json objects */
 
 exports.lyftestimate = function(req, res) {
-    console.log(req.body);
-    let destinations = req.body.destinations;
+    let destinations = req.body;
+    console.log(destinations);
     let est_cost_cents_min = 0;
     let est_cost_cents_max = 0;
     let est_time_hours = 0;
@@ -22,8 +22,11 @@ exports.lyftestimate = function(req, res) {
     let asynCalls = [];
 
     for (let i = 0; i < destinations.length - 1; ++i) {
-        start = destinations[i];
-        end = destinations[i + 1];
+        start = destinations[i]['geometry']['location'];
+        end = destinations[i + 1]['geometry']['location'];
+
+        console.log('start: ' + start);
+        console.log('end: ' + end);
 
         let opts = { 
             'endLat': end.lat, // Latitude of the ending location
