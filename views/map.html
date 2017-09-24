@@ -1,36 +1,40 @@
-<div class="header"><strong>Plan Trip</strong></div>
-<br />
-<div class="col-sm-3">
-	<input id="map_lookup" class="line_input center-block" places-auto-complete ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" 
-																	on-place-changed="placeChanged()" />
-	<ul id="locations_list" class="center-block">
-		<li class="card center-block" ng-repeat="location in locations track by $index">
-			<div>
-				<button class="remove_location" ng-click="removeLocation($index)"><i class="fa fa-close"></i></button>
-				{{location.formatted_address}}
-			</div>
-		</li>
-	</ul>
-	<h2>Options:</h2>
-	<select id="option_select" class="center-block" ng-model="option">
-		<option value="optimal" selected>optimal</option>	
-		<option value="random">random</option>
-		<option value="worst">worst</option>
-		<option value="priority">priority</option>
-	</select>	
-</div>
-<div class="col-sm-9">
-	<div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
-		<ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
-
+<div class="header" align="center"><h2>Route Planner</h2></div>
+<!-- <br /> -->
+<div class="container planner">
+    <div class="col-sm-3">
+        <div class="row locations">
+            <h4>Places:</h4>
+            <input id="map_lookup" class="line_input center-block" places-auto-complete ng-model="address" component-restrictions="{country:'us'}" types="{{types}}" on-place-changed="placeChanged()" />
+            <ul id="locations_list" class="center-block">
+                <li class="card center-block" ng-repeat="location in locations track by $index">
+                    <div>
+                        <button class="remove_location" ng-click="removeLocation($index)"><i class="fa fa-close"></i></button>
+                        {{location.formatted_address}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <h4>Path Options:</h4>
+            <select id="option_select" ng-model="option">
+                <option value="optimal" selected>optimal</option>   
+                <option value="random">random</option>
+                <option value="worst">worst</option>
+                <option value="priority">priority</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div map-lazy-load="https://maps.googleapis.com/maps/api/js" map-lazy-load-params="{{googleMapsUrl}}">
+            <ng-map default-style="false" center="41,-87" zoom="3"></ng-map>
+        </div>
+        <button id="call_lyft_button" class="center-block" type="submit" ng-click="findShortestRoute()">
+            Generate Path
+        </button>
+        <button id="start_trip_button" class="center-block" type="submit" ng-click="startTrip()" ng-if="path_made">
+            Start Trip
+        </button>
 	</div>
-	<div class="center-block">	
-		<button id="call_lyft_button" type="submit" ng-click="findShortestRoute()">
-			Make Path</button>
-		<button id="start_trip_button" type="submit" ng-click="startTrip()" ng-if="path_made">
-			Start Trip</button>
-	</div>
-		
 </div>
 
 <script type="text/ng-template" id="route-form-modal.html">

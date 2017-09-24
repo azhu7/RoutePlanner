@@ -5,8 +5,14 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
         $scope.visited = response.data.visited;
         $scope.unvisited = response.data.unvisited;
 
+        //$scope.locations.splice($scope.locations.length - 1, 1);  // Remove round trip node
+        //$scope.unvisited.splice($scope.visited.length - 1, 1);  // Remove round trip node
         $scope.visited.push($scope.unvisited[0]);  // Automatically visit the first location
         $scope.unvisited.splice(0, 1);  // Visited the first location
+
+        //console.log($scope.visited);
+        //console.log($scope.unvisited);
+        console.log($scope.locations);
 
         // init the map
         NgMap.getMap().then(function(map) {
