@@ -1,4 +1,5 @@
 let lyft = require('node-lyft');
+let dest = require('./utility').dest;
 let defaultClient = lyft.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: Client Authentication
@@ -6,12 +7,6 @@ let clientAuth = defaultClient.authentications['Client Authentication'];
 clientAuth.accessToken = 'tXFXVn2qRVUf19Q1itJzRnCbm+ymnZGxusevwd+KFdMH0emtHEdt+2c5EWkXbT/NPu346Bg6ym2wEtXDgTGuCbCzCunEJCbTwza7r3QzWAYLlwTLReaEAUo=';
 
 let apiInstance = new lyft.PublicApi();
-
-function dest(lat, lng, address) {
-    this.lat = lat;
-    this.lng = lng;
-    this.address = address;
-}
 
 function estimate(min_price, max_price, time, miles) {
     this.min_price = min_price;
@@ -78,15 +73,15 @@ function getRideEstimate(destinations) {
 }
 
 /* Test Cases */
-// let d1 = new dest(37.7763, -122.3918, "blah");
-// let d2 = new dest(37.7721, -122.4533, "blah");
-// let d3 = new dest(37.2341, -122.1029, "blah");
-// let d4 = new dest(37.2352, -122.1032, "blah");
-// let arr = [d1, d2, d3, d4];
-// getRideEstimate(arr);
+let d1 = new dest(37.7763, -122.3918, "blah");
+let d2 = new dest(37.7721, -122.4533, "blah");
+let d3 = new dest(37.2341, -122.1029, "blah");
+let d4 = new dest(37.2352, -122.1032, "blah");
+let arr = [d1, d2, d3, d4];
+getRideEstimate(arr);
 
-// getAvailableRideTypes(d1).then((obj) => {
-//     console.log(obj);
-// }).catch((e) => {
-//     console.log(e);
-// });
+/*getAvailableRideTypes(d1).then((obj) => {
+    console.log(obj);
+}).catch((e) => {
+    console.log(e);
+});*/
