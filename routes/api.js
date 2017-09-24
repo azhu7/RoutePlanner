@@ -129,3 +129,11 @@ exports.starttrip = function(req, res) {
     let trip_code = db.add_trip(leader, destinations);
     res.json({ trip_code: trip_code });
 }
+
+exports.gettripinfo = function(req, res) {
+    let trip_code = req.body;
+    console.log(trip_code);
+    db.get_trip(trip_code, function(trip) {
+        res.json(trip);
+    });
+}
