@@ -215,5 +215,17 @@ app.controller('RouteCtrl',function($scope,$http,NgMap,$state,$stateParams) {
     $scope.markers = []
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
+
+    //left and right arrow keys will move  through itinerary
+    window.onkeyup = function(e) {
+	var key = e.keyCode ? e.keyCode : e.which;
+
+	if (key == 37) {
+	    $scope.moveBack();
+	}
+	else if (key == 39) { 
+	    $scope.moveForward();
+	}
+    }
 })
 
