@@ -74,13 +74,20 @@ module.exports = {
             trip_code: code,
             members: [leader_],
             leader: leader_,
-            path: destinations_,
+            path: JSON.parse(JSON.stringify(destinations_)),
             unvisited: destinations_,
             visited: [],
             travel_times: [],
             next_dest: destinations_[0]
         };
 
+        new_trip['visited'].push(new_trip['unvisited'][0]);
+        new_trip['unvisited'].splice(0, 1);
+
+        console.log(new_trip['path']);
+        console.log(new_trip['visited']);
+        console.log(new_trip['unvisited']);
+        
         db.collection(trip_collection_name).insertOne(new_trip, function(err, trip) {
             if (err) throw err;
             console.log('db: Created new trip ' + new_trip['trip_code'] + ' for ' + leader_);
