@@ -63,6 +63,9 @@ function get_cost_matrix(destinations, callback) {
     let cost_matrix = new Array(destinations.length);
     for (let i = 0; i < cost_matrix.length; i++) {
         cost_matrix[i] = new Array(destinations.length);
+        for (let j = 0; j < cost_matrix[i].length; j++) {
+            cost_matrix[i][j] = 10;
+        }
     }
 
     var start = destinations.map(function(item) { return item.lat + ',' + item.lng; });
@@ -72,24 +75,31 @@ function get_cost_matrix(destinations, callback) {
         if (err) throw err;
         if (!distances) throw 'No distances';
         else if (distances.status === 'OK') {
-            for (var i = 0; i < start.length; i++) {
-                for (var j = i + 1; j < end.length; j++) {
-                    var origin = distances.origin_addresses[i];
-                    var destination = distances.destination_addresses[j];
-                    if (distances.rows[0].elements[j].status == 'OK') {
-                        var distance = distances.rows[i].elements[j].distance.text;
-                        //console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
-                        cost_matrix[i][j] = parseFloat(distance.slice(0, distance.length - 3));
-                        cost_matrix[j][i] = parseFloat(distance.slice(0, distance.length - 3));
-                    } else {
-                        throw (destination + ' is not reachable by land from ' + origin);
+            try {
+                for (var i = 0; i < start.length; i++) {
+                    for (var j = i + 1; j < end.length; j++) {
+                        var origin = distances.origin_addresses[i];
+                        var destination = distances.destination_addresses[j];
+                        if (distances.rows[0].elements[j].status == 'OK') {
+                            var distance = distances.rows[i].elements[j].distance.text;
+                            //console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
+                            cost_matrix[i][j] = parseFloat(distance.slice(0, distance.length - 3));
+                            cost_matrix[j][i] = parseFloat(distance.slice(0, distance.length - 3));
+                        } else {
+                            cost_matrix[i][j] = 1000;
+                            cost_matrix[j][i] = 1000;
+                            //throw (destination + ' is not reachable by land from ' + origin);
+                        }
                     }
+
+                    cost_matrix[i][i] = 0.01;
                 }
 
-                cost_matrix[i][i] = 0.01;
+                callback(cost_matrix);
+            } catch (err) {
+                console.log("Cost matrix error: " + err);
+                callback(cost_matrix);
             }
-
-            callback(cost_matrix);
         }
     });
 }
